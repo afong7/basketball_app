@@ -2,39 +2,40 @@
 
 {% block content %}
 
-<head>
-<!-- <header>Think the Game</header> -->
-<p>Practice basketball decision-making by watching game film, choosing an action, and learning from the result.</p>
+<!-- <head>
 <nav>
-    <a href="#hero">Explore videos</a>
-    <a href="#how">How it works</a>
+    <ul>
+        <a href="#videos">Explore videos</a>
+        <a href="#how">How it works</a>
+    </ul>
 </nav>
-</head>
+</head> -->
 
 <body>
-<section class="hero">
-  <h2>Available Videos</h2>
+<section id="how">
+    <h2 class="how">Train your basketball IQ</h2>
+    <p>Practice basketball decision-making by watching game film, choosing an action, and learning from the result.</p>
+    <div class="how-grid">
+        <ol class="how-card">
+            <li> Watch a real basketball situation.</li>
+            <li> Make your decision when the video pauses.</li>
+            <li> Learn from the outcome and coaching explanation.</li>
+        </ol>
+    </div>
 </section>
-
+<br><br>
 <section id="videos">
-    {% for video in videos %}
-    <article class="video-card">
-      <h3>{{ video["title"] }}</h3>
-      <p><strong>Category:</strong> {{ video["category"] }}</p>
-      <p>{{ video["description"] }}</p>
-
-      <a href="{{ url_for('video', video_id=video['id']) }}">Start this video</a>
-    </article>
-    {% endfor %}
-</section>
-
-<section class="how">
-    <h2>Train your basketball IQ</h2>
-    <ol>
-        <li>Watch a real basketball situation.</li>
-        <li>Make your decision when the video pauses.</li>
-        <li>Learn from the outcome and coaching explanation.</li>
-    </ol>
+    <h2 class="hero">Available Videos</h2>
+    <div class="video-grid">
+        {% for video in videos %}
+        <article class="video-card">
+            <h3>{{ video["title"] }}</h3>
+            <p><strong>Category:</strong> {{ video["category"] }}</p>
+            <p>{{ video["description"] }}</p>
+            <a href="{{ url_for('video', video_id=video['id']) }}">Start this video</a>
+        </article>
+        {% endfor %}
+    </div>
 </section>
 </body>
 

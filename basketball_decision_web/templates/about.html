@@ -1,27 +1,23 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<header>
-    <h1>Think the Game</h1>
+<body>
     <nav>
         <ul>
-            <li><a href="#what">What is it?</a></li>
+            <li><a href="#how">How do I use it?</a></li>
             <li><a href="#mission">The Mission</a></li>
             <li><a href="#coaches">For Coaches</a></li>
         </ul>
     </nav>
-</header>
 
-<section id="what">
+<section id="how">
 <h2>How do I use this app?</h2>
-<p>
-    <ol>
-        <li>Coaches (or other users) upload some game film. It could be separate video clips or whole quarters/halves/games.</li>
-        <li>Choose your pause time (right before an action happens) and reveal time (when the correct answer is shown).</li>
-        <li>After the clip pauses (at the pause time), players choose from a multiple choice question what they think is the best decision.</li>
-        <li>The video plays until the reveal time, where an explanation will pop up explaining what the best decision is and why. (The explanation can be inputted or verbally stated)</li>
-    </ol>
-</p>
+<ol>
+    <li>Coaches (or other users) upload some game film. It could be separate video clips or whole quarters/halves/games.</li>
+    <li>Choose your pause time (right before an action happens) and reveal time (when the correct answer is shown).</li>
+    <li>After the clip pauses (at the pause time), players choose from a multiple choice question what they think is the best decision.</li>
+    <li>The video plays until the reveal time, where an explanation will pop up explaining what the best decision is and why. (The explanation can be inputted or verbally stated)</li>
+</ol>
 </section>
 
 <section id="mission">
@@ -42,10 +38,8 @@
     However, if you upload your own film, you must choose pause times and reveal times (i.e. you must go through the film yourself).
 </p>
 </section>
+</body>
 
+<a href="{{ url_for('index') }}">Return to Homepage</a>
 
-<footer>
-    <a href="./index.html">Back to Homepage</a>
-    <p><span style="font-weight: bold">Contact me: </span>lex@example.com  |  Think the Game 2026(c)</p>
-</footer>
 {% endblock %}
