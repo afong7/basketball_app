@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<head>
+<header>Think the Game</header>
+<p>Practice basketball decision-making by watching game film, choosing an action, and learning from the result.</p>
+<nav>
+    <a href="#hero">Explore videos</a>
+    <a href="#how">How it works</a>
+</nav>
+</head>
+
+<section class="hero">
+  <h2>Available Videos</h2>
+</section>
+
+<section id="videos">
+    {% for video in videos %}
+    <article class="video-card">
+      <h3>{{ video["title"] }}</h3>
+      <p><strong>Category:</strong> {{ video["category"] }}</p>
+      <p>{{ video["description"] }}</p>
+
+      <a href="{{ url_for('video', video_id=video['id']) }}">Start this video</a>
+    </article>
+    {% endfor %}
+</section>
+
+<section class="how">
+    <h2>Train your basketball IQ</h2>
+    <ol>
+        <li>Watch a real basketball situation.</li>
+        <li>Make your decision when the video pauses.</li>
+        <li>Learn from the outcome and coaching explanation.</li>
+    </ol>
+</section>
+
+{% endblock %}
