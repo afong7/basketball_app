@@ -1,21 +1,57 @@
-a
-header
-nav
-nav a
-main
-footer
-.hero
-.hero a
-.video-grid
-.video-card
-.video-card h3
-.video-card a
+* {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    text-align: center;
+    width: max-content;
+}
+
+body {
+    background-color: rgb(215,215,215);
+}
+
+a {
+    font-weight: bold;
+}
+header {
+    background-color: rgb(68, 177, 255);
+    color: grey;
+    border: 3px rgb(68, 177, 255) solid;
+}
+nav {
+    border: 3px solid coral;
+    border-radius: 15px;
+}
+
+/* nav a */
+/* main */
+/* footer */
+/* footer a */
+.hero h2 {
+    font-weight: bold;
+}
+/* .hero a */
+.video-card {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: #f2f1f1;
+    padding: 10px 5px;
+}
+.video-card h3 {
+    font-weight: bold;
+}
+.video-card a {
+    background-color: rgba(0, 0, 255, 0.261);
+}
+
+a,
+nav a,
+.hero a,
+.video-card a,
+footer a {
+    color: orange;
+    font-weight: bold;
+}
 
 /* Use a warm off-white/light-gray page background.
 Use a dark navy or charcoal header.
-Use an orange accent color for basketball-related buttons and links.
-Set a readable sans-serif font stack.
-Center content with a maximum page width.
 Add space between sections.
-Give cards a white background, rounded corners, subtle shadow, and padding.
 Make primary buttons visually obvious. */
