@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="static/style.css">
+  </head>
+  
+  <body>
+    <header>
+      <h1 id="title">THINK THE GAME</h1>
+      <nav>
+        <ul>
+          <li><a href="{{ url_for('index') }}">Homepage</a></li>
+          <li><a href="{{ url_for('about') }}">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      {% block content %}
+      {% endblock %}
+    </main>
+
+    <footer id="contact">
+      <p>Contact me: lex@example.com  |  Think the Game 2026(c)</p>
+    </footer>
+
+  </body>
+</html>

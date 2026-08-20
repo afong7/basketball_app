@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>{{ video["title"] }}</h1>
+
+  <p><strong>Category:</strong> {{ video["category"] }}</p>
+  <p>{{ video["description"] }}</p>
+
+  <video id="training-video" controls width="600">
+    <source
+      src="{{ url_for('static', filename='videos/' ~ video['video_file']) }}"
+      type="video/mp4"
+    >
+    Your browser does not support this video format.
+  </video>
+
+  <section id="question-panel" hidden>
+    <h2 id="question-heading">Make your decision</h2>
+    <p id="question-text"></p>
+
+    <div id="answer-choices"></div>
+  </section>
+
+  <section id="feedback-panel" hidden>
+    <h2 id="feedback-heading"></h2>
+    <p id="feedback-message"></p>
+
+    <button id="continue-button" type="button">
+      Continue video
+    </button>
+  </section>
+
+  <section id="completion-panel" hidden>
+    <h2>Video complete!</h2>
+    <p id="completion-message"></p>
+
+    <a href="{{ url_for('index') }}">Return to all videos</a>
+  </section>
+
+  <script>
+    window.videoData = {
+      decisionPoints: {{ video["decision_points"] | tojson }}
+    };
+  </script>
+
+  <script src="{{ url_for('static', filename='video.js') }}"></script>
+{% endblock %}
