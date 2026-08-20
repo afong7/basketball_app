@@ -1,6 +1,7 @@
 * {
     /* font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; */
     font-family: 'Courier New', serif;
+    box-sizing: border-box;
 }
 
 #title {
@@ -15,7 +16,7 @@ ul {
 
 body {
     background-color: rgb(215,215,215);
-    border-color: rgb(60, 156, 224);
+    border-color: rgba(0, 0, 255, 0.261);
 }
 
 a {
@@ -23,9 +24,10 @@ a {
 }
 
 header {
-    background-color: rgb(60, 156, 224);
+    background-color: rgba(0, 0, 255, 0.261);
     color: black;
-    border: 3px rgb(60, 156, 224) solid;
+    border: 3px rgba(0, 0, 255, 0.261) solid;
+    border-radius: 15px;
 }
 
 .hero h2 {
@@ -53,14 +55,14 @@ nav:hover a {
 .video-card {
     background-color: #fff;
     border-radius: 15px;
-    box-shadow: 0px 4px 12px rgb(60, 156, 224);
+    box-shadow: 0px 4px 12px rgba(0, 0, 255, 0.261);
     padding: 1.25rem;
 }
 
 .how-card {
     background-color: #fff;
     border-radius: 15px;
-    box-shadow: 0px 4px 12px rgb(60, 156, 224);
+    box-shadow: 0px 4px 12px rgba(0, 0, 255, 0.261);
     padding: 2.5rem;
 }
 
@@ -90,7 +92,7 @@ footer {
     /* margin-top: 10px;
     padding: 50%;
     text-align: center; */
-    background-color: rgb(60, 156, 224);
+    background-color: rgba(0, 0, 255, 0.261);
     color: #fff;
 }
 
