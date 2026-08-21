@@ -1,6 +1,17 @@
-* {
-    /* font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; */
+* {    
     font-family: 'Courier New', serif;
+    box-sizing: border-box;
+}
+
+/* BASE */
+/* HEADER */
+header {
+    background-color: navy;
+    color: white;
+    border: 3px navy solid;
+    padding: 10px;
+    margin: 10px;
+    /* border-radius: 15px; */
 }
 
 #title {
@@ -10,25 +21,41 @@
 }
 
 ul {
-    color: orange;
+    color: darkorange;
 }
 
+footer {
+    margin: 10px;
+    padding: 3px;
+    border: 3px navy solid;
+    background-color: navy;
+    color: #fff;
+}
+
+/* BODY */
+
 body {
-    background-color: rgb(215,215,215);
-    border-color: rgb(60, 156, 224);
+    background-color: rgb(240, 240, 240);
+    border-color: navy;
 }
 
 a {
     font-weight: bold;
 }
 
-header {
-    background-color: rgb(60, 156, 224);
-    color: black;
-    border: 3px rgb(60, 156, 224) solid;
+.site-logo {
+    margin: 0.5rem auto 3rem;
+    text-align: center;
 }
 
-.hero h2 {
+#logo {
+    display: block;
+    width: clamp(90px, 15vw, 160px);
+    height: auto;
+    margin: 0 auto;
+}
+
+/* .hero h2 {
     text-align: center;
     font-weight: bold;
 }
@@ -36,6 +63,12 @@ header {
 .how h2 {
     text-align: center;
     font-weight: bold;
+} */
+
+h2 {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
 }
 
 main {
@@ -48,19 +81,20 @@ main {
 nav:hover a {
     /* padding: 5px 5px; */
     line-height: 3px;
+    margin-top: 0 auto;
 }
 
 .video-card {
     background-color: #fff;
     border-radius: 15px;
-    box-shadow: 0px 4px 12px rgb(60, 156, 224);
+    box-shadow: 0px 4px 12px navy;
     padding: 1.25rem;
 }
 
 .how-card {
     background-color: #fff;
     border-radius: 15px;
-    box-shadow: 0px 4px 12px rgb(60, 156, 224);
+    box-shadow: 0px 4px 12px navy;
     padding: 2.5rem;
 }
 
@@ -69,7 +103,7 @@ nav:hover a {
 }
 
 .video-card a {
-    color: rgba(0, 0, 255, 0.261);
+    color: navy;
 }
 
 .video-grid {
@@ -86,18 +120,10 @@ nav:hover a {
     gap: 20px; /* Optional spacing between your grid items */
 }
 
-footer {
-    /* margin-top: 10px;
-    padding: 50%;
-    text-align: center; */
-    background-color: rgb(60, 156, 224);
-    color: #fff;
-}
-
 a,
 nav a,
 .hero a,
 footer a {
-    color: orange;
+    color: darkorange;
     font-weight: bold;
 }
