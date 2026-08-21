@@ -1,10 +1,34 @@
-* {    
-    font-family: 'Courier New', serif;
+/* =========================
+   1. GLOBAL STYLES
+   Used on every page
+   ========================= */
+@font-face {
+    font-family: "MyFont";
+    src: url("Basketball.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    font-family: "MyFont", serif;
     box-sizing: border-box;
 }
 
-/* BASE */
-/* HEADER */
+body {
+    background-color: rgb(240, 240, 240);
+    border-color: navy;
+}
+
+a {
+    font-weight: bold;
+}
+
+/* =========================
+   2. BASE.HTML
+   Shared header, navigation,
+   main content area, logo, footer
+   ========================= */
+
 header {
     background-color: navy;
     color: white;
@@ -14,10 +38,14 @@ header {
     /* border-radius: 15px; */
 }
 
+header h1 {
+    height: fit-content;
+}
+
 #title {
     text-align: center;
     font-weight: bold;
-    font-size: 60px;
+    font-size: 65px;
 }
 
 ul {
@@ -32,17 +60,6 @@ footer {
     color: #fff;
 }
 
-/* BODY */
-
-body {
-    background-color: rgb(240, 240, 240);
-    border-color: navy;
-}
-
-a {
-    font-weight: bold;
-}
-
 .site-logo {
     margin: 0.5rem auto 3rem;
     text-align: center;
@@ -55,20 +72,11 @@ a {
     margin: 0 auto;
 }
 
-/* .hero h2 {
-    text-align: center;
-    font-weight: bold;
-}
-
-.how h2 {
-    text-align: center;
-    font-weight: bold;
-} */
-
 h2 {
     text-align: center;
     font-weight: bold;
     margin-top: 20px;
+    font-size: 40px;
 }
 
 main {
@@ -78,11 +86,19 @@ main {
     padding: 2rem 1rem;
 }
 
-nav:hover a {
-    /* padding: 5px 5px; */
-    line-height: 3px;
-    margin-top: 0 auto;
+nav a {
+    font-size: 20px;
 }
+
+nav p {
+    margin: 0 auto;
+    padding: 0 auto;
+}
+
+/* =========================
+   3. INDEX.HTML / HOMEPAGE
+   Homepage-only sections
+   ========================= */
 
 .video-card {
     background-color: #fff;
@@ -100,10 +116,7 @@ nav:hover a {
 
 .video-card h3 {
     font-weight: bold;
-}
-
-.video-card a {
-    color: navy;
+    font-size: 25px;
 }
 
 .video-grid {
@@ -123,7 +136,40 @@ nav:hover a {
 a,
 nav a,
 .hero a,
-footer a {
+footer a,
+.video-card a {
     color: darkorange;
     font-weight: bold;
 }
+
+
+/* =========================
+   4. ABOUT.HTML
+   About-page-only sections
+   ========================= */
+
+/* #what, #mission, #coaches, #reroute */
+.about-logo {
+    margin: 3rem auto 1.5rem;
+}
+
+
+/* =========================
+   5. VIDEO.HTML
+   Training video and quiz interface
+   ========================= */
+
+/* #training-video */
+/* #question-panel */
+/* #answer-choices */
+/* #feedback-panel */
+/* #continue-button */
+/* #completion-panel */
+
+
+/* =========================
+   6. MOBILE STYLES
+   Narrow screens / phones
+   ========================= */
+
+/* @media (...) { ... } */
