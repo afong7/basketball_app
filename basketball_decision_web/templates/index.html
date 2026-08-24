@@ -24,9 +24,9 @@
 
 <section id="how">
     <h2 class="how">Train your basketball IQ</h2>
-    <p>Practice basketball decision-making by watching game film, choosing an action, and learning from the result.</p>
     <div class="how-grid">
         <ol class="how-card">
+            <p>Practice basketball decision-making by watching game film, choosing an action, and learning from the result.</p>
             <li> Watch a real basketball situation.</li><br>
             <li> Make your decision when the video pauses.</li><br>
             <li> Learn from the outcome and coaching explanation.</li>
@@ -41,7 +41,7 @@
         <article class="video-card">
             <h3>{{ video["title"] }}</h3>
             <p><strong>Category:</strong> {{ video["category"] }}</p>
-            <p>{{ video["description"] }}</p>
+            <p>{{ video["description"] }}</p><br>
             <a href="{{ url_for('video', video_id=video['id']) }}">Start this video</a>
         </article>
         {% endfor %}

@@ -1,18 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>{{ video["title"] }}</h1>
+  <!-- <section>
+    <h1 id="title">{{ video["title"] }}</h1>
+    <p><strong>Category:</strong> {{ video["category"] }}</p>
+    <p>{{ video["description"] }}</p>
+  </section> -->
 
-  <p><strong>Category:</strong> {{ video["category"] }}</p>
-  <p>{{ video["description"] }}</p>
-
-  <video id="training-video" controls width="600">
-    <source
+  <section>
+    <video id="training-video" controls width="600">      
+      <source
       src="{{ url_for('static', filename='videos/' ~ video['video_file']) }}"
       type="video/mp4"
-    >
-    Your browser does not support this video format.
-  </video>
+      >Your browser does not support this video format.
+    </video>
+  </section>
 
   <section id="question-panel" hidden>
     <h2 id="question-heading">Make your decision</h2>

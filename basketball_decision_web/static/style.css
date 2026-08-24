@@ -100,6 +100,25 @@ nav p {
    Homepage-only sections
    ========================= */
 
+.how-card {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 12px navy;
+    padding: 1.5rem;
+}
+
+.how-card p {
+    font-size: 20px;
+}
+
+.how-grid {
+    display: grid;
+    /* Automatically wraps items when they drop below 250px, then expands them to fill extra space */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px; /* Optional spacing between your grid items */
+}
+
+
 .video-card {
     background-color: #fff;
     border-radius: 15px;
@@ -107,26 +126,16 @@ nav p {
     padding: 1.25rem;
 }
 
-.how-card {
-    background-color: #fff;
-    border-radius: 15px;
-    box-shadow: 0px 4px 12px navy;
-    padding: 2.5rem;
-}
-
 .video-card h3 {
     font-weight: bold;
     font-size: 25px;
 }
 
-.video-grid {
-    display: grid;
-    /* Automatically wraps items when they drop below 250px, then expands them to fill extra space */
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px; /* Optional spacing between your grid items */
+.video-card a {
+    font-size: 20px;
 }
 
-.how-grid {
+.video-grid {
     display: grid;
     /* Automatically wraps items when they drop below 250px, then expands them to fill extra space */
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -149,22 +158,90 @@ footer a,
    ========================= */
 
 /* #what, #mission, #coaches, #reroute */
-.about-logo {
-    margin: 3rem auto 1.5rem;
+
+#what,
+#mission,
+#coaches {
+    display: grid;
+    /* Automatically wraps items when they drop below 250px, then expands them to fill extra space */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px; /* Optional spacing between your grid items */
 }
 
+.card {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 12px navy;
+    padding: 1.5rem;
+    line-height: 20px;
+    text-align: justify;
+}
+
+.about-logo {
+    margin: 1.5rem auto 1.5rem;
+}
+
+#reroute {
+    color: darkorange;
+    font-weight: bold;
+    font-size: 20px;
+}
 
 /* =========================
    5. VIDEO.HTML
    Training video and quiz interface
    ========================= */
 
-/* #training-video */
-/* #question-panel */
-/* #answer-choices */
-/* #feedback-panel */
-/* #continue-button */
-/* #completion-panel */
+/* =========================
+   VIDEO.HTML
+   ========================= */
+
+#training-video {
+    display: block;
+    width: min(100%, 700px);
+    height: auto;
+    margin: 0 auto;
+    border-radius: 15px;
+    border: 3px navy auto;
+}
+
+#question-panel,
+#feedback-panel,
+#completion-panel {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    text-align: center;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0px 4px 12px navy;
+}
+
+#question-text,
+#feedback-message,
+#completion-message {
+    font-size: 20px;
+}
+
+#answer-choices {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    color: darkorange;
+    font-size: 15px;
+}
+
+#answer-choices button,
+#continue-button {
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    color: darkorange;
+    font-size: 20px;
+}
+
+#completion-panel a {
+    font-size: 20px;
+}
 
 
 /* =========================
