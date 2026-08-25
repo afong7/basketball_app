@@ -1,6 +1,49 @@
 from flask import Flask, render_template, request
+from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+
+#c) enable communication with a database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///basketball.db' 
+# - takes the location of the application’s database from the SQLALCHEMY_DATABASE_URI configuration variable we set
+
+#d) set the SQLALCHEMY_TRACK_MODIFICATIONS configuration option to False to disable a feature of Flask-SQLAlchemy that signals 
+# the application every time a change is about to be made in the database.
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+#e) create an SQLAlchemy object and bind it to our app
+db = SQLAlchemy(app)
+
+class Video(db.Model): #any CREATED model inherits from db.Model
+    __tablename__ = "videos"
+    id = db.Column(db.Integer, unique=True, primary_key=True)
+    title = db.Column(db.String(120), index=True, nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    category = db.Column(db.String(50), index=True)
+    video_file = db.Column(db.String(255), index=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+    decision_points = db.relationship('DecisionPoint', backref='video', lazy=True, cascade="all, delete-orphan", order_by="DecisionPoint.pause_time")
+    
+#a) initialize a field with the .relationship() method. 
+# In one-to-many relationships, the relationship field is used on the ‘one’ side of the relationship
+class DecisionPoint(db.Model):
+    __tablename__ = "decision_points"
+    id = db.Column(db.Integer, primary_key=True)
+    video_id = db.Column(db.Integer, db.ForeignKey('videos.id'), nullable=False)
+    pause_time = db.Column(db.Float, nullable=False)
+    reveal_time = db.Column(db.Float, nullable=False)
+    question = db.Column(db.Text, nullable=False)
+    explanation = db.Column(db.Text, nullable=False)
+    answer_choices = db.relationship('AnswerChoices', backref='decision_point', lazy=True, cascade="all, delete-orphan")
+
+class AnswerChoices(db.Model):
+    __tablename__ = "answer_choices"
+    id = db.Column(db.Integer, primary_key=True)
+    decision_point_id = db.Column(db.Integer, db.ForeignKey('decision_points.id'), nullable=False)
+    text = db.Column(db.String(255), nullable=False)
+    is_correct = db.Column(db.Boolean, default=False, nullable=False)
+    position = db.Column(db.Integer, nullable=False)
 
 # drills = [
 #     {
@@ -100,6 +143,8 @@ def about():
 
 #Tell Flask to start the web server
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
 
 
