@@ -39,10 +39,10 @@
     <div class="video-grid">
         {% for video in videos %}
         <article class="video-card">
-            <h3>{{ video["title"] }}</h3>
-            <p><strong>Category:</strong> {{ video["category"] }}</p>
-            <p>{{ video["description"] }}</p><br>
-            <a href="{{ url_for('video', video_id=video['id']) }}">Start this video</a>
+            <h3>{{ video.title }}</h3>
+            <p><strong>Category:</strong> {{ video.category }}</p>
+            <p>{{ video.description }}</p><br>
+            <a href="{{ url_for('video', video_id=video.id) }}">Start this video</a>
         </article>
         {% endfor %}
     </div>

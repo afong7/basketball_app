@@ -10,7 +10,7 @@
   <section>
     <video id="training-video" controls width="600">      
       <source
-      src="{{ url_for('static', filename='videos/' ~ video['video_file']) }}"
+      src="{{ url_for('static', filename='videos/' ~ video.video_file) }}"
       type="video/mp4"
       >Your browser does not support this video format.
     </video>
@@ -38,10 +38,10 @@
 
     <a href="{{ url_for('index') }}">Return to all videos</a>
   </section>
-
+  
   <script>
-    window.videoData = {
-      decisionPoints: {{ video["decision_points"] | tojson }}
+  window.videoData = {
+    decisionPoints: {{ decision_points_data | tojson }}
     };
   </script>
 
