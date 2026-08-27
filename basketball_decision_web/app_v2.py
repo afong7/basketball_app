@@ -5,13 +5,22 @@ from flask_login import UserMixin, LoginManager, login_user, logout_user, curren
 
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+import os
 
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "your_secret_key_here"
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///basketball.db"
-# real database = basketball_decision_web/instance/basketball.db
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./basketball.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+app.config["UPLOAD_FOLDER"] = "static/uploads"
+app.config["MAX_CONTENT_LENGTH"] = 500 * 1024 * 1024 #500 MB limit
+ALLOWED_EXTENSIONS = {"mp4", "mov"}
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 
 db = SQLAlchemy(app)
 login_manager = LoginManager()
@@ -332,10 +341,101 @@ def dashboard():
         user=current_user
     )
 
-@app.route("/upload_video")
+@app.route("/upload_video", methods=["GET", "POST"])
 @login_required
 def upload_video():
-    return "Upload page coming soon!"
+    if request.method == "POST":
+        file = request.files.get("video_file")
+        title = request.form.get("title")
+        category = request.form.get("category")
+        description = request.form.get("description")
+        print(request.files)
+
+        # Validate file
+        if not file or file.filename == "":
+            return "No file selected", 400
+
+        if not allowed_file(file.filename):
+            return "Invalid file type. Only MP4 and MOV files are allowed.", 400
+
+        # Secure filename
+        filename = secure_filename(file.filename)
+
+        # Save file
+        filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+        file.save(filepath)
+
+        # Create Video entry
+        new_video = Video(
+            title=title,
+            description=description,
+            category=category,
+            video_file=filename
+        )
+
+        # Save video to database
+        db.session.add(new_video)
+        db.session.commit()
+
+        # Redirect to decsion point editor
+        return redirect(url_for("edit_video", video_id=new_video.id))
+
+    return render_template(
+        "upload_video.html",
+        title="Video Upload | Think the Game")
+
+
+@app.route("/edit_video/<int:video_id>", methods=["GET", "POST"])
+@login_required
+def edit_video(video_id):
+    video = db.get_or_404(Video, video_id)
+
+    if request.method == "POST":
+        pause_time = float(request.form.get("pause_time"))
+        reveal_time = float(request.form.get("reveal_time"))
+        question = request.form.get("question")
+        explanation = request.form.get("explanation")
+
+        # Collect choices
+        choices = []
+        for i in range(1, 6):
+            text = request.form.get(f"choice{i}")
+            if text and text.strip() != "":
+                choices.append(text.strip())
+        correct_choice_index = int(request.form.get("correct_choice"))
+
+        # Create DecisionPoint
+        dp = DecisionPoint(
+            video_id = video.id,
+            pause_time=pause_time,
+            reveal_time=reveal_time,
+            question=question,
+            explanation=explanation
+        )
+
+        db.session.add(dp)
+        db.session.flush() # get dp.id before adding choices
+
+        # Add AnswerChoice rows
+        for position, text in enumerate(choices, start=1):
+            ac = AnswerChoice(
+                decision_point_id=dp.id,
+                text=text,
+                position=position,
+                is_correct=(position - 1 == correct_choice_index)
+            )
+            db.session.add(ac)
+
+        db.session.commit()
+
+    decision_points = DecisionPoint.query.filter_by(video_id=video.id).all()
+
+    return render_template(
+        "edit_video.html",
+        video=video,
+        decision_points=decision_points
+    )
+
 
 # Allows us to actually see the app in action when we run the script + upload/update the database
 if __name__ == "__main__":

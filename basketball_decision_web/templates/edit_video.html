@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<header>
+    <nav>
+    <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="#contact">Contact</a></p>
+
+    <h1 id="edit-title">{{ video.title }}</h1>
+</header>
+
+    <h2 id="edit-welcome">Edit your game film!</h2>
+    <video id="edit-video" width="640" controls>
+        <source src="{{ url_for('static', filename='uploads/'+video.video_file) }}" type="video/mp4">
+    </video>
+    <br><br>
+
+    <h2 id="edit-dp">Add a Decision Point</h2>
+    <form method="POST" action="{{ url_for('edit_video', video_id=video.id) }}">
+        <label id="edit-label">Pause time (seconds): </label>
+        <input id="edit-text" type="number" step="0.1" name="pause_time" required><br><br>
+        <br>
+
+        <label id="edit-label">Reveal time (when to reveal the correct answer): </label>
+        <input id="edit-text" type="number" step="0.1" name="reveal_time" required><br><br>
+        <br>
+
+        <label id="edit-label" for="question">Question: </label>
+        <input type="text" list="questions" name="question" id="question" placeholder="Choose an option or type your own"><br><br>
+        <datalist id="questions">
+            <option value="What should the player do next?"></option>
+            <option value="Who should the player pass to?"></option>
+            <option value="Where should the help defense be?"></option>
+            <option value="Where should the outlet be?"></option>
+            <option value="Where should the player be?"></option>
+        </datalist>
+        <br>
+
+        <label id="edit-label">Answer Choices: </label><br>
+        <input id="edit-text" type="text" name="choice1" list="choice1" placeholder="Choice 1" required><br>
+        <datalist id="choice1">
+            <option value="Pass to the corner"></option>
+            <option value="Pass to the top of the Key"></option>
+            <option value="Pass into the post/key"></option>
+            <option value="Run wide"></option>
+            <option value="Shoot"></option>
+            <option value="Drive/attack"></option>
+            <option value="Kickout"></option>
+        </datalist>
+        <input id="edit-text" type="text" name="choice2" list="choice2" placeholder="Choice 2" required><br>
+        <datalist id="choice2">
+            <option value="Pass to the corner"></option>
+            <option value="Pass to the top of the Key"></option>
+            <option value="Pass into the post/key"></option>
+            <option value="Run wide"></option>
+            <option value="Shoot"></option>
+            <option value="Drive/attack"></option>
+            <option value="Kickout"></option>
+        </datalist>
+        <input id="edit-text" type="text" name="choice3" list="choice3" placeholder="Choice 3" required><br>
+        <datalist id="choice3">
+            <option value="Pass to the corner"></option>
+            <option value="Pass to the top of the Key"></option>
+            <option value="Pass into the post/key"></option>
+            <option value="Run wide"></option>
+            <option value="Shoot"></option>
+            <option value="Drive/attack"></option>
+            <option value="Kickout"></option>
+        </datalist>
+        <input id="edit-text" type="text" name="choice4" list="choice4" placeholder="Choice 4"><br>
+        <datalist id="choice4">
+            <option value="Pass to the corner"></option>
+            <option value="Pass to the top of the Key"></option>
+            <option value="Pass into the post/key"></option>
+            <option value="Run wide"></option>
+            <option value="Shoot"></option>
+            <option value="Drive/attack"></option>
+            <option value="Kickout"></option>
+        </datalist>
+        <input id="edit-text" type="text" name="choice5" list="choice5" placeholder="Choice 5"><br>
+        <datalist id="choice5">
+            <option value="Pass to the corner"></option>
+            <option value="Pass to the top of the Key"></option>
+            <option value="Pass into the post/key"></option>
+            <option value="Run wide"></option>
+            <option value="Shoot"></option>
+            <option value="Drive/attack"></option>
+            <option value="Kickout"></option>
+        </datalist>
+        <br>
+
+        <label id="edit-label">Correct Answer (enter the number): </label>
+        <input id="edit-text" type="number" step="1" name="correct_choice" min="1" max="5" required>
+        <br>
+
+        <label id="edit-label">Explanation (why was the answer the correct choice?): </label>
+        <textarea id="edit-text" name="explanation"></textarea>
+        <br>
+        <br>
+        <br>
+
+        <button id="edit-button" type="submit">COMPLETE UPLOAD</button>
+    </form>
+
+    <h2 id="edit-welcome">Existing Decision Points</h2>
+    {% for dp in decision_points %}
+    <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+        <strong>Pause:</strong> {{ dp.pause_time }}s<br>
+        <strong>Reveal:</strong> {{ dp.reveal_time }}s<br>
+        <strong>Question:</strong> {{ dp.question }}<br>
+        <strong>Explanation:</strong> {{ dp.explanation }}<br>
+
+        <strong>Choices:</strong>
+        <ul>
+            {% for choice in dp.answer_choices %}
+                <li>
+                    {{ choice.position }}. {{ choice.text }}
+                    {% if choice.is_correct %}(Correct){% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endfor %}
+
+    <h4 id="edit-redirect">If you want to see your video:</h4>
+    <p><a href="{{ url_for('video') }}">TRY IT OUT!</a></p>
+
+
+{% endblock %}

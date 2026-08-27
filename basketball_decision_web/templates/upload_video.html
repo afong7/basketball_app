@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<header>
+    <nav>
+    <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="#contact">Contact</a></p>
+
+    <h1 id="video-title">VIDEO MAKER</h1>
+</header>
+
+    <h2 id="video-welcome">Upload your game film!</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <label id="video-label">Title: </label>
+        <input id="video-text" type="text" name="title" required><br><br>
+        
+        <label id="video-label" for="category">Category: </label>
+        <input type="text" list="categories" name="category" id="category" required><br><br>
+        <datalist id="categories">
+          <option value="Jump ball"></option>
+          <option value="Passing"></option>
+          <option value="Shooting"></option>
+          <option value="Rebounding"></option>
+          <option value="Defensive positioning (team)"></option>
+          <option value="Defensive positioning (individual)"></option>
+          <option value="Offensive positioning (team)"></option>
+          <option value="Offensive positioning (individual)"></option>
+          <option value="Transition offense/outlet"></option>
+          <option value="Transition defense"></option>
+          <option value="Other"></option>
+        </datalist>
+        
+        <label id="video-label">Description (e.g., Describe what you want them to focus on): </label>
+        <textarea id="video-text" name="description"></textarea><br><br>
+
+        <label id="video-label">File: </label>
+        <input id="video-text" type="file" name="video_file" accept=".mp4, .mov" required><br><br>
+        
+        <button id="video-button" type="submit">UPLOAD VIDEO</button>
+    </form>
+{% endblock %}

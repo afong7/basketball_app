@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <!-- <section>
-    <h1 id="title">{{ video["title"] }}</h1>
-    <p><strong>Category:</strong> {{ video["category"] }}</p>
-    <p>{{ video["description"] }}</p>
-  </section> -->
+<header>
+    <nav>
+    <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="#contact">Contact</a></p>
+
+    <h1 id="video-title">VIDEO PAGE</h1>
+</header>
 
   <section>
     <video id="training-video" controls width="600">      

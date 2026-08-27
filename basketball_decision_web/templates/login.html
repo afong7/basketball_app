@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<body>
-    <title id="login-title">Login</title>
+<header>
+    <nav>
+    <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="#contact">Contact</a></p>
 
+    <h1 id="login-title">LOGIN</h1>
+</header>
+
+<body>
     <form method="POST">
         <label id="login-label">Username/Email: </label>
         <input id="login-text" type="text" name="identifier" required><br><br>
@@ -13,6 +18,9 @@
         
         <button id="login-button" type="submit">Login</button>
     </form>
+
+    <h3 id="register-redirect">Don't have an account? Register here</h3>
+    <p><a href="{{ url_for('register') }}">REGISTER</a></p>
 </body>
 
 {% endblock %}
