@@ -396,7 +396,7 @@ def edit_video(video_id):
         question = request.form.get("question")
         explanation = request.form.get("explanation")
 
-        # Collect choices
+        # Collect choices ;)
         choices = []
         for i in range(1, 6):
             text = request.form.get(f"choice{i}")
