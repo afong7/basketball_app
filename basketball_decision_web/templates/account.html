@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<header>
+    <nav>
+    <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="#contact">Contact</a></p>
+
+    <h1 id="account-title">Your Account</h1>
+</header>
+    <p id="account-header">Here are the details of your account</p>
+
+    <p><strong>Username: </strong> {{ user.username }}</p>
+    <p><strong>Email: </strong> {{ user.email }}</p>
+    <p><strong>Date joined: </strong> {{ user.created_at }}</p>
+
+    <h4 id="logout-redirect">If you want to logout:</h4>
+    <p><a href="{{ url_for('logout') }}">LOGOUT</a></p>
+{% endblock %}

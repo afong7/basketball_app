@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<header>
+    <nav>
+    <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="#contact">Contact</a></p>
+
+    <h1 id="dashboard-title">DASHBOARD</h1>
+</header>
+
+    <h2 id="dashboard-welcome">Welcome {{ user.username }}!</h2>
+    <h3 id="dashboard-coach">Coach Tools</h3>
+    <p id="dashboard-text"><a href="{{ url_for('upload_video') }}">Upload a new training video</a></p>
+    <br>
+    <h3 id="dashboard-coach">Player Tools</h3>
+    <p id="dashboard-text">Training progress and stats will appear here later...</p>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<header>
+    <nav>
+    <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="#contact">Contact</a></p>
+
+    <h1 id="register-title">Register</h1>
+</header>
+
+<body>
+    <h2 id="register-header">Create an Account</h2>
+
+    <form method="POST">
+        <label id="register-label">Username: </label>
+        <input id="register-text" type="text" name="username" required><br><br>
+        
+        <label id="register-label">Email: </label>
+        <input id="register-text" type="email" name="email" required><br><br>
+        
+        <label id="register-label" for="password">Password: </label>
+        <input type="password" name="password" required><br><br>
+        
+        <button id="register-button" type="submit">REGISTER</button>
+    </form>
+
+    <h3 id="login-redirect">Already have an account? Login here!</h3>
+    <p><a href="{{ url_for('login') }}">LOGIN</a></p>
+</body>
+
+{% endblock %}

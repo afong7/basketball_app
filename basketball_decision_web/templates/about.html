@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<header>
+    <nav>
+    <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="#contact">Contact</a></p>
+
+    <h1 id="about-title">ABOUT THE APP</h1>
+</header>
 <body>
     <nav>
         <a href="#what">How do I use it?</a><br>

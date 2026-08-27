@@ -1,16 +1,43 @@
 from datetime import datetime
 
-from flask import Flask, render_template
+from flask import Flask, redirect, render_template, request, url_for
+from flask_login import UserMixin, LoginManager, login_user, logout_user, current_user, login_required
+
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
-
+app.config["SECRET_KEY"] = "your_secret_key_here"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///basketball.db"
+# real database = basketball_decision_web/instance/basketball.db
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
 
+
+class User(UserMixin,db.Model):
+    __tablename__ = "users"
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+    created_at = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow,
+        index=True
+    )
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 class Video(db.Model):
     __tablename__ = "videos"
@@ -26,7 +53,6 @@ class Video(db.Model):
         default=datetime.utcnow,
         index=True
     )
-
     decision_points = db.relationship(
         "DecisionPoint",
         backref="video",
@@ -49,7 +75,6 @@ class DecisionPoint(db.Model):
     reveal_time = db.Column(db.Float, nullable=False)
     question = db.Column(db.Text, nullable=False)
     explanation = db.Column(db.Text, nullable=False)
-
     answer_choices = db.relationship(
         "AnswerChoice",
         backref="decision_point",
@@ -170,6 +195,11 @@ def create_data():
 
     db.session.commit()
 
+# Tells Flask‑Login how to load a user from the database when they have a session cookie.
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.get(User, int(user_id))
+
 
 @app.route("/")
 def index():
@@ -177,7 +207,7 @@ def index():
 
     return render_template(
         "index.html",
-        title="Basketball Decision Making",
+        title="Homepage | Think the Game",
         videos=videos
     )
 
@@ -230,6 +260,84 @@ def about():
     )
 
 
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form.get("username")
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        existing = User.query.filter_by(email=email).first()
+        if existing:
+            return "Email already registered. Please log in.", 400
+
+        new_user = User(username=username, email=email)
+        new_user.set_password(password)
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        login_user(new_user)
+
+        return redirect("/")
+
+    return render_template(
+        "register.html",
+        title="Register | Think the Game"
+    )
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        identifier = request.form.get("identifier")
+        password = request.form.get("password")
+        if not identifier or not password:
+            return "Please enter both username/email and password", 400
+
+        if "@" in identifier:
+            user = User.query.filter_by(email=identifier).first()
+        else:
+            user = user = User.query.filter_by(username=identifier).first()    
+
+        if user and user.check_password(password):
+            login_user(user)
+            return redirect("/")
+        else:
+            return "Invalid email or password.", 400
+
+    return render_template(
+        "login.html",
+        title="Login | Think the Game"
+    )
+
+@app.route("/account")
+@login_required
+def account():
+    return render_template("account.html", user=current_user, title="Account | Think the Game")
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("index"))
+
+
+@app.route("/dashboard")
+@login_required
+def dashboard():
+    return render_template(
+        "dashboard.html",
+        title="Dashboard | Think the Game",
+        user=current_user
+    )
+
+@app.route("/upload_video")
+@login_required
+def upload_video():
+    return "Upload page coming soon!"
+
+# Allows us to actually see the app in action when we run the script + upload/update the database
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
