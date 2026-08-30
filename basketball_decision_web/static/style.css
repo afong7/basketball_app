@@ -23,6 +23,11 @@ a {
     font-weight: bold;
 }
 
+section {
+    margin: 2rem 0;
+}
+
+
 /* =========================
    2. BASE.HTML
    Shared header, navigation,
@@ -34,7 +39,7 @@ header {
     color: white;
     border: 3px navy solid;
     padding: 10px;
-    margin: 10px;
+    margin: 0;
     /* border-radius: 15px; */
 }
 
@@ -61,7 +66,7 @@ footer {
 }
 
 .site-logo {
-    margin: 0.5rem auto 3rem;
+    margin: 1.5rem auto 3rem;
     text-align: center;
 }
 
@@ -86,14 +91,29 @@ main {
     padding: 2rem 1rem;
 }
 
+nav {
+    display: flex;
+    justify-content: center;
+    text-align: left;
+    gap: 2rem;
+    padding: 0.5rem 0;
+}
+
 nav a {
-    font-size: 20px;
+    text-decoration: none;
+    font-size: 22px;
+    color: darkorange;
+}
+
+nav a:hover {
+    text-decoration: underline;
 }
 
 nav p {
     margin: 0 auto;
     padding: 0 auto;
 }
+
 
 /* =========================
    3. INDEX.HTML / HOMEPAGE
@@ -105,6 +125,7 @@ nav p {
     border-radius: 15px;
     box-shadow: 0px 4px 12px navy;
     padding: 1.5rem;
+    margin: 0 auto;
 }
 
 .how-card p {
@@ -117,7 +138,6 @@ nav p {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px; /* Optional spacing between your grid items */
 }
-
 
 .video-card {
     background-color: #fff;
@@ -140,6 +160,12 @@ nav p {
     /* Automatically wraps items when they drop below 250px, then expands them to fill extra space */
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px; /* Optional spacing between your grid items */
+}
+
+.video-card,
+.how-card,
+.card {
+    margin-bottom: 2rem;
 }
 
 a,
@@ -192,10 +218,6 @@ footer a,
    Training video and quiz interface
    ========================= */
 
-/* =========================
-   VIDEO.HTML
-   ========================= */
-
 #training-video {
     display: block;
     width: min(100%, 700px);
@@ -243,9 +265,202 @@ footer a,
     font-size: 20px;
 }
 
+/* =========================
+   6. ACCOUNT.HTML
+   ========================= */
+#account-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 65px;
+}
+
+#account-header {
+    text-align: center;
+    font-size: 35px;
+}
+
+#logout-redirect {
+    margin: 0 auto;
+    font-size: 20px;
+    padding: 0 auto;
+}
+
+.dynamic-text {
+    font-family:Helvetica, Arial, sans-serif;
+}
+
 
 /* =========================
-   6. MOBILE STYLES
+   7. LOGIN.HTML
+   ========================= */
+#login-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 65px;
+}
+
+#login-label {
+    margin: 10px, auto;
+    font-size: 25px;
+}
+
+#login-text {
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+#login-button {
+    padding: 3px;
+    font-size: 20px;
+    color: navy;
+}
+
+#login-redirect {
+    margin: 10px, auto;
+    font-size: 35px;
+    padding: 0 auto;
+}
+
+
+/* =========================
+   8. REGISTER.HTML
+   ========================= */
+
+#register-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 65px;
+}
+
+#register-header {
+    text-align: center;
+    font-size: 35px;
+}
+
+#register-label {
+    font-size: 25px;
+}
+
+#register-text {
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+#register-button {
+    padding: 3px;
+    font-size: 30px;
+    color: navy;
+}
+
+#login-redirect {
+    margin: 10px, auto;
+    font-size: 35px;
+    padding: 0 auto;
+}
+
+/* =========================
+   9. DASHBOARD.HTML
+   ========================= */
+
+#dashboard-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 65px;
+}
+
+#dashboard-welcome {
+    text-align: center;
+    font-size: 35px;
+}
+
+#dashboard-coach {
+    text-align: left;
+    font-size: 25px;
+    margin: 0 auto;
+}
+
+
+/* =========================
+   10. UPLOAD_VIDEO.HTML
+   ========================= */
+
+#video-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 65px;
+}
+
+#video-welcome {
+    text-align: center;
+    font-size: 35px;   
+}
+
+#video-label {
+    font-size: 25px;
+}
+
+#video-text {
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+#category {
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+#video-button {
+    padding: 3px;
+    font-size: 30px;
+    color: navy;
+}
+
+/* =========================
+   11. EDIT_VIDEO.HTML + EDIT_DP.HTML
+   ========================= */
+
+#edit-title,
+#edit-dp-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 65px;
+}
+
+#edit-welcome {
+    text-align: center;
+    font-size: 35px; 
+}
+
+#edit-video {
+    display: block;
+    width: min(100%, 700px);
+    height: auto;
+    margin: 0 auto;
+    border-radius: 15px;
+    border: 3px navy auto;
+}
+
+#edit-label {
+    font-size: 23px;
+}
+
+#edit-text,
+#list-qs {
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+#edit-button {
+    padding: 3px;
+    font-size: 25px;
+    color: navy;
+}
+
+#edit-redirect {
+    margin: 10px, auto;
+    font-size: 27px;
+    padding: 0 auto;
+}
+
+
+
+/* =========================
+   N. MOBILE STYLES
    Narrow screens / phones
    ========================= */
 

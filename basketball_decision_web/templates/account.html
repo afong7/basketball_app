@@ -4,16 +4,26 @@
 
 <header>
     <nav>
-    <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="#contact">Contact</a></p>
+    <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="#contact">Contact</a> | <a href="{{ url_for('dashboard') }}">Dashboard</a></p>
 
     <h1 id="account-title">Your Account</h1>
 </header>
+
     <p id="account-header">Here are the details of your account</p>
 
-    <p><strong>Username: </strong> {{ user.username }}</p>
-    <p><strong>Email: </strong> {{ user.email }}</p>
-    <p><strong>Date joined: </strong> {{ user.created_at }}</p>
+    <p><strong>Username: </strong></p><p class="dynamic-text">{{ user.username }}</p>
+    <br>
+    <p><strong>Email: </strong></p> <p class="dynamic-text">{{ user.email }}</p>
+    <br>
+    <p><strong>Date joined: </strong></p> <p class="dynamic-text">{{ user.created_at }}</p>
+    <br>
+    <br>
 
-    <h4 id="logout-redirect">If you want to logout:</h4>
-    <p><a href="{{ url_for('logout') }}">LOGOUT</a></p>
+    <form method="POST" action="{{ url_for('delete_account') }}">
+        <p id="delete-button-text">If you want to delete your account:</p>
+        <button id="delete-account-button" type="submit">Delete Account</button>
+    </form>
+
+    <h3 id="logout-redirect">If you want to logout: <a href="{{ url_for('logout') }}">CLICK HERE</a></h3>
+    
 {% endblock %}

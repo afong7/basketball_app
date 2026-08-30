@@ -7,6 +7,8 @@
 
     <h1 id="login-title">LOGIN</h1>
 </header>
+<br>
+<br>
 
 <body>
     <form method="POST">
@@ -16,11 +18,13 @@
         <label id="login-label" for="password">Password: </label>
         <input type="password" name="password" required><br><br>
         
-        <button id="login-button" type="submit">Login</button>
+        <button id="login-button" type="submit">LOGIN</button>
     </form>
-
-    <h3 id="register-redirect">Don't have an account? Register here</h3>
-    <p><a href="{{ url_for('register') }}">REGISTER</a></p>
+    <br>
+    <br>
+    <br>
+    
+    <h3 id="register-redirect">Don't have an account? Register here: <a href="{{ url_for('register') }}">REGISTER</a></h3>
 </body>
 
 {% endblock %}

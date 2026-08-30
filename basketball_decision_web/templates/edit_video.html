@@ -3,14 +3,20 @@
 {% block content %}
 <header>
     <nav>
-    <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="#contact">Contact</a></p>
+        {% if current_user.is_authenticated %}
+        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('account') }}">Account</a> | <a href="{{ url_for('dashboard') }}">Dashboard</a> | <a href="#contact">Contact</a></p><br>
+        {% else %}
+        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('login') }}">Login/Make an Account</a> | <a href="#contact">Contact</a></p>
+        {% endif %}
+    </nav>
 
-    <h1 id="edit-title">{{ video.title }}</h1>
+    <h1 id="edit-title">Edit your game film</h1>
 </header>
+<br><br>
 
-    <h2 id="edit-welcome">Edit your game film!</h2>
+    <h2 id="edit-welcome">{{ video.title }}</h2>
     <video id="edit-video" width="640" controls>
-        <source src="{{ url_for('static', filename='uploads/'+video.video_file) }}" type="video/mp4">
+        <source src="{{ url_for('static', filename='uploads/'+video.video_file) }}">
     </video>
     <br><br>
 
@@ -25,8 +31,8 @@
         <br>
 
         <label id="edit-label" for="question">Question: </label>
-        <input type="text" list="questions" name="question" id="question" placeholder="Choose an option or type your own"><br><br>
-        <datalist id="questions">
+        <input id="edit-text" type="text" list="questions" name="question" id="question" placeholder="Choose an option or type your own"><br><br>
+        <datalist id="questions" name="questions" style="width: auto;">
             <option value="What should the player do next?"></option>
             <option value="Who should the player pass to?"></option>
             <option value="Where should the help defense be?"></option>
@@ -88,22 +94,30 @@
         </datalist>
         <br>
 
-        <label id="edit-label">Correct Answer (enter the number): </label>
+        <label id="edit-label">Correct Answer (enter the choice number): </label>
         <input id="edit-text" type="number" step="1" name="correct_choice" min="1" max="5" required>
         <br>
 
         <label id="edit-label">Explanation (why was the answer the correct choice?): </label>
-        <textarea id="edit-text" name="explanation"></textarea>
+        <textarea id="edit-text" name="explanation" placeholder="(Optional)"></textarea>
         <br>
         <br>
         <br>
 
         <button id="edit-button" type="submit">COMPLETE UPLOAD</button>
     </form>
+    <br>
+    <br>
+    <br>
+    <br>
 
     <h2 id="edit-welcome">Existing Decision Points</h2>
     {% for dp in decision_points %}
-    <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+    <div style="background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 12px navy;
+    padding: 1.25rem;
+    margin-bottom: 10px">
         <strong>Pause:</strong> {{ dp.pause_time }}s<br>
         <strong>Reveal:</strong> {{ dp.reveal_time }}s<br>
         <strong>Question:</strong> {{ dp.question }}<br>
@@ -118,11 +132,18 @@
                 </li>
             {% endfor %}
         </ul>
+        <br><br>
+        <form method="POST" action="{{ url_for('delete_decision_point', dp_id=dp.id) }}">
+            <button id="delete-button" type="submit">DELETE</button>
+        </form>
+        <br>
+        <a href="{{ url_for('edit_decision_point', dp_id=dp.id) }}">Edit</a>
     </div>
     {% endfor %}
+    <br>
+    <br>
 
-    <h4 id="edit-redirect">If you want to see your video:</h4>
-    <p><a href="{{ url_for('video') }}">TRY IT OUT!</a></p>
+    <h4 id="edit-redirect">If you want to see your completed video: <a href="{{ url_for('video', video_id=video.id) }}">TRY IT OUT!</a></h4>
 
 
 {% endblock %}

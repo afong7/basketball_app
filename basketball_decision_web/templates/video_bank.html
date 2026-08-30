@@ -9,46 +9,24 @@
         <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('login') }}">Login/Make an Account</a> | <a href="#contact">Contact</a></p>
         {% endif %}
     </nav>
-    
-    <h1 id="title">THINK THE GAME</h1>
+
+    <h1 id="video-bank-title">VIDEO BANK</h1>
 </header>
 
-<body>
 <section>
-  <figure class="site-logo">
-    <img
-      id="logo"
-      src="{{ url_for('static', filename='logo.png') }}"
-      alt="Think the Game logo"
-    >
-  </figure>
-</section>
-
-<section id="how">
-    <h2 class="how">Train your basketball IQ</h2>
-    <div class="how-grid">
-        <ol class="how-card">
-            <p>Practice basketball decision-making by watching game film, choosing an action, and learning from the result.</p>
-            <li> Watch a real basketball situation.</li><br>
-            <li> Make your decision when the video pauses.</li><br>
-            <li> Learn from the outcome and coaching explanation.</li>
-        </ol>
-    </div>
-</section>
-<br><br>
-<!-- <section id="videos" visible="False">
-    <h2 class="hero">Available Videos</h2>
+<h2 id="video-bank-welcome">Here are your current videos: </h2>
     <div class="video-grid">
         {% for video in videos %}
         <article class="video-card">
             <h3>{{ video.title }}</h3>
             <p><strong>Category:</strong> {{ video.category }}</p>
             <p>{{ video.description }}</p><br>
-            <a href="{{ url_for('video', video_id=video.id) }}">Start this video</a>
+
+            <a href="{{ url_for('video', video_id=video.id) }}">Start this video</a><br>
+            <a href="{{ url_for('edit_video', video_id=video.id) }}">Edit this video</a>
         </article>
         {% endfor %}
     </div>
-</section> -->
-</body>
+</section>
 
 {% endblock %}

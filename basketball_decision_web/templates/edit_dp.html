@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<header>
+    <nav>
+        {% if current_user.is_authenticated %}
+        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('account') }}">Account</a> | <a href="{{ url_for('dashboard') }}">Dashboard</a> | <a href="#contact">Contact</a></p><br>
+        {% else %}
+        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('login') }}">Login/Make an Account</a> | <a href="#contact">Contact</a></p>
+        {% endif %}
+    </nav>
+
+    <h1 id="edit-dp-title">Edit the decision point information for {{ vid.title }}</h1>
+</header>
+<br><br>
+
+<section>
+    <video id="edit-video" width="640" controls>
+    <source src="{{ url_for('static', filename='uploads/' ~ vid.video_file) }}"
+>
+</video>
+<br><br>
+
+</section>
+
+<section>
+    <form method="POST">
+        <label id="edit-label">Pause time: </label>
+        <input id="edit-text" name="pause_time" value="{{ dp.pause_time }}"><br>
+        <label id="edit-label">Reveal time: </label>
+        <input id="edit-text" name="reveal_time" value="{{ dp.reveal_time }}"><br>
+        <label id="edit-label">Question: </label>
+        <input id="list-qs" name="question" style="width: 350px;" value="{{ dp.question }}"><br><br>
+        <label id="edit-label">Explanation: </label>
+        <textarea id="edit-text" name="explanation">{{ dp.explanation }}</textarea><br><br><br>
+        
+        <h3>Edit Choices</h3>
+        {% for choice in dp.answer_choices %}
+        <label>Choice {{ choice.position }}:</label>
+        <input id="edit-text" type="text" name="choice{{ choice.position }}" value="{{ choice.text }}">
+
+        <label>
+            <input type="radio" name="correct_choice" value="{{ choice.position }}"
+                {% if choice.is_correct %}checked{% endif %}>
+            Mark as correct
+        </label>
+
+        <br><br>
+        {% endfor %}
+
+    <button id="edit-button" type="submit">Save</button>
+</form>
+</section>
+
+{% endblock %}

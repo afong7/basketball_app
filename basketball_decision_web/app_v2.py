@@ -41,6 +41,8 @@ class User(UserMixin,db.Model):
         default=datetime.utcnow,
         index=True
     )
+    videos = db.relationship("Video", backref="user", lazy=True)
+
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -52,6 +54,7 @@ class Video(db.Model):
     __tablename__ = "videos"
 
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     title = db.Column(db.String(120), nullable=False, index=True)
     description = db.Column(db.Text, nullable=True)
     category = db.Column(db.String(50), nullable=False, index=True)
@@ -111,98 +114,98 @@ class AnswerChoice(db.Model):
     position = db.Column(db.Integer, nullable=False)
 
 
-def create_data():
-    sample_title = "Start of the game"
+# def create_data():
+#     sample_title = "Start of the game"
 
-    existing_video = Video.query.filter_by(title=sample_title).first()
+#     existing_video = Video.query.filter_by(title=sample_title).first()
 
-    if existing_video:
-        return
+#     if existing_video:
+#         return
 
-    new_video = Video(
-        title=sample_title,
-        description=(
-            "Watch this opening possession and make the best decision "
-            "at each pause."
-        ),
-        category="Jump ball",
-        video_file="clip1.mp4"
-    )
+#     new_video = Video(
+#         title=sample_title,
+#         description=(
+#             "Watch this opening possession and make the best decision "
+#             "at each pause."
+#         ),
+#         category="Jump ball",
+#         video_file="clip1.mp4"
+#     )
 
-    decision1 = DecisionPoint(
-        video=new_video,
-        pause_time=14.9,
-        reveal_time=16.3,
-        question="Where should the centre tip it to?",
-        explanation="There is no defense behind. It's the safest option."
-    )
+#     decision1 = DecisionPoint(
+#         video=new_video,
+#         pause_time=14.9,
+#         reveal_time=16.3,
+#         question="Where should the centre tip it to?",
+#         explanation="There is no defense behind. It's the safest option."
+#     )
 
-    answer_choice1 = AnswerChoice(
-        decision_point=decision1,
-        text="Behind",
-        is_correct=True,
-        position=1
-    )
+#     answer_choice1 = AnswerChoice(
+#         decision_point=decision1,
+#         text="Behind",
+#         is_correct=True,
+#         position=1
+#     )
 
-    answer_choice2 = AnswerChoice(
-        decision_point=decision1,
-        text="In front",
-        is_correct=False,
-        position=2
-    )
+#     answer_choice2 = AnswerChoice(
+#         decision_point=decision1,
+#         text="In front",
+#         is_correct=False,
+#         position=2
+#     )
 
-    answer_choice3 = AnswerChoice(
-        decision_point=decision1,
-        text="To the side",
-        is_correct=False,
-        position=3
-    )
+#     answer_choice3 = AnswerChoice(
+#         decision_point=decision1,
+#         text="To the side",
+#         is_correct=False,
+#         position=3
+#     )
 
-    decision2 = DecisionPoint(
-        video=new_video,
-        pause_time=16.8,
-        reveal_time=19.4,
-        question="What is the best next decision?",
-        explanation=(
-            "The player who caught the jump ball is a 4 and defense has "
-            "gotten up. Unless she's Wemby (she's not), find a ball handler."
-        )
-    )
+#     decision2 = DecisionPoint(
+#         video=new_video,
+#         pause_time=16.8,
+#         reveal_time=19.4,
+#         question="What is the best next decision?",
+#         explanation=(
+#             "The player who caught the jump ball is a 4 and defense has "
+#             "gotten up. Unless she's Wemby (she's not), find a ball handler."
+#         )
+#     )
 
-    answer_choice4 = AnswerChoice(
-        decision_point=decision2,
-        text="Dribble across half",
-        is_correct=False,
-        position=1
-    )
+#     answer_choice4 = AnswerChoice(
+#         decision_point=decision2,
+#         text="Dribble across half",
+#         is_correct=False,
+#         position=1
+#     )
 
-    answer_choice5 = AnswerChoice(
-        decision_point=decision2,
-        text="Find a ball handler",
-        is_correct=True,
-        position=2
-    )
+#     answer_choice5 = AnswerChoice(
+#         decision_point=decision2,
+#         text="Find a ball handler",
+#         is_correct=True,
+#         position=2
+#     )
 
-    answer_choice6 = AnswerChoice(
-        decision_point=decision2,
-        text="Throw the ball out of bounds",
-        is_correct=False,
-        position=3
-    )
+#     answer_choice6 = AnswerChoice(
+#         decision_point=decision2,
+#         text="Throw the ball out of bounds",
+#         is_correct=False,
+#         position=3
+#     )
 
-    db.session.add_all([
-        new_video,
-        decision1,
-        decision2,
-        answer_choice1,
-        answer_choice2,
-        answer_choice3,
-        answer_choice4,
-        answer_choice5,
-        answer_choice6
-    ])
+#     db.session.add_all([
+#         new_video,
+#         decision1,
+#         decision2,
+#         answer_choice1,
+#         answer_choice2,
+#         answer_choice3,
+#         answer_choice4,
+#         answer_choice5,
+#         answer_choice6
+#     ])
 
-    db.session.commit()
+#     db.session.commit()
 
 # Tells Flask‑Login how to load a user from the database when they have a session cookie.
 @login_manager.user_loader
@@ -325,6 +328,14 @@ def login():
 def account():
     return render_template("account.html", user=current_user, title="Account | Think the Game")
 
+@app.route("/delete_account", methods=["POST"])
+@login_required
+def delete_account():
+    user=current_user
+    db.session.delete()
+    db.session.commit()
+    return redirect(url_for('index'))
+
 @app.route("/logout")
 @login_required
 def logout():
@@ -340,6 +351,16 @@ def dashboard():
         title="Dashboard | Think the Game",
         user=current_user
     )
+
+@app.route("/coach/videos")
+@login_required
+def video_bank():
+    videos = Video.query.filter_by(user_id=current_user.id).all()
+    return render_template(
+        "video_bank.html",
+        title="Video bank | Think the Game",
+        videos=videos)
+
 
 @app.route("/upload_video", methods=["GET", "POST"])
 @login_required
@@ -370,14 +391,15 @@ def upload_video():
             title=title,
             description=description,
             category=category,
-            video_file=filename
+            video_file=filename,
+            user_id=current_user.id
         )
 
         # Save video to database
         db.session.add(new_video)
         db.session.commit()
 
-        # Redirect to decsion point editor
+        # Redirect to decision point editor
         return redirect(url_for("edit_video", video_id=new_video.id))
 
     return render_template(
@@ -422,7 +444,7 @@ def edit_video(video_id):
                 decision_point_id=dp.id,
                 text=text,
                 position=position,
-                is_correct=(position - 1 == correct_choice_index)
+                is_correct=(position == correct_choice_index)
             )
             db.session.add(ac)
 
@@ -436,11 +458,43 @@ def edit_video(video_id):
         decision_points=decision_points
     )
 
+@app.route("/delete_decision_point/<int:dp_id>", methods=["POST"])
+def delete_decision_point(dp_id):
+    dp = db.get_or_404(DecisionPoint, dp_id)
+    video_id = dp.video_id
+    db.session.delete(dp)
+    db.session.commit()
+    return redirect(url_for("edit_video", video_id=video_id))
+
+@app.route("/edit_decision_point/<int:dp_id>", methods=["GET", "POST"])
+def edit_decision_point(dp_id):
+    dp = db.get_or_404(DecisionPoint, dp_id)
+    vid = dp.video
+
+    if request.method == "POST":
+        dp.pause_time = float(request.form.get("pause_time"))
+        dp.reveal_time = float(request.form.get("reveal_time"))
+        dp.question = request.form.get("question")
+        dp.explanation = request.form.get("explanation")
+
+        # Update choices
+        correct_choice = int(request.form.get("correct_choice"))
+        for choice in dp.answer_choices:
+            new_text = request.form.get(f"choice{choice.position}")
+            if new_text:
+                choice.text = new_text.strip()
+
+            choice.is_correct = (choice.position == correct_choice)
+
+        db.session.commit()
+        return redirect(url_for("edit_video", video_id=dp.video_id))
+
+    return render_template("edit_dp.html", title="Edit Decision Point | Think the Game", dp=dp, vid=vid)
+
 
 # Allows us to actually see the app in action when we run the script + upload/update the database
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-        create_data()
 
     app.run(debug=True)
