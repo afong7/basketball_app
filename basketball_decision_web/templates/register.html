@@ -4,13 +4,24 @@
 <header>
     <nav>
     <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="#contact">Contact</a></p>
+    </nav>
 
     <h1 id="register-title">Register</h1>
 </header>
-<br><br>
 
-<body>
-    <h2 id="register-header">Create an Account!</h2>
+<section>
+    <figure class="about-logo">
+        <img 
+        id="logo" 
+        src="{{ url_for('static', filename='logo.png') }}"
+        alt="Think the Game logo"
+        >
+    </figure>
+</section>
+
+
+<section>
+    <h2 id="register-header">Create an Account!</h2><br><br>
 
     <form method="POST">
         <label id="register-label">Username: </label>
@@ -20,13 +31,13 @@
         <input id="register-text" type="email" name="email" required><br><br>
         
         <label id="register-label" for="password">Password: </label>        
-        <input type="password" id="password" name="password"><br><br>
+        <input type="password" id="password" name="password"><br><br><br>
         
         <button id="register-button" type="submit">REGISTER</button>
     </form>
+</section>
+<br><br><br><br>
 
-    <h3 id="login-redirect">Already have an account? Login here!</h3>
-    <p><a href="{{ url_for('login') }}">LOGIN</a></p>
-</body>
+    <h3 id="login-redirect">Already have an account? <a href="{{ url_for('login') }}">LOGIN</a></h3>
 
 {% endblock %}

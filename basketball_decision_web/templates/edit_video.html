@@ -4,7 +4,7 @@
 <header>
     <nav>
         {% if current_user.is_authenticated %}
-        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('account') }}">Account</a> | <a href="{{ url_for('dashboard') }}">Dashboard</a> | <a href="#contact">Contact</a></p><br>
+        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('account') }}">Account</a> | <a href="{{ url_for('dashboard') }}">Dashboard</a> | <a href="{{ url_for('logout') }}">LOGOUT</a> | <a href="#contact">Contact</a></p><br>
         {% else %}
         <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('login') }}">Login/Make an Account</a> | <a href="#contact">Contact</a></p>
         {% endif %}
@@ -117,27 +117,29 @@
     border-radius: 15px;
     box-shadow: 0px 4px 12px navy;
     padding: 1.25rem;
-    margin-bottom: 10px">
+    margin-bottom: 20px;
+    font-size: 20px;
+    line-height: 20px;">
         <strong>Pause:</strong> {{ dp.pause_time }}s<br>
         <strong>Reveal:</strong> {{ dp.reveal_time }}s<br>
         <strong>Question:</strong> {{ dp.question }}<br>
         <strong>Explanation:</strong> {{ dp.explanation }}<br>
 
         <strong>Choices:</strong>
-        <ul>
+        <ul id="edit-choices">
             {% for choice in dp.answer_choices %}
                 <li>
                     {{ choice.position }}. {{ choice.text }}
-                    {% if choice.is_correct %}(Correct){% endif %}
+                    {% if choice.is_correct %}
+                    (Correct)
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>
-        <br><br>
+        <a id="edit-dp-link" href="{{ url_for('edit_decision_point', dp_id=dp.id) }}">Edit</a><br><br><br>
         <form method="POST" action="{{ url_for('delete_decision_point', dp_id=dp.id) }}">
-            <button id="delete-button" type="submit">DELETE</button>
+            <button id="delete-dp-button" type="submit">DELETE</button>
         </form>
-        <br>
-        <a href="{{ url_for('edit_decision_point', dp_id=dp.id) }}">Edit</a>
     </div>
     {% endfor %}
     <br>

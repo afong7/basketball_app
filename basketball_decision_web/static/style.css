@@ -183,7 +183,10 @@ footer a,
    About-page-only sections
    ========================= */
 
-/* #what, #mission, #coaches, #reroute */
+#about-title {
+    text-align: center;
+    font-size: 65px;
+}
 
 #what,
 #mission,
@@ -259,6 +262,7 @@ footer a,
     cursor: pointer;
     color: darkorange;
     font-size: 20px;
+    background-color: #fff;
 }
 
 #completion-panel a {
@@ -279,14 +283,29 @@ footer a,
     font-size: 35px;
 }
 
-#logout-redirect {
+#account-text {
+    font-size: 25px;
+}
+
+#logout-redirect,
+#delete-button-text {
     margin: 0 auto;
-    font-size: 20px;
+    font-size: 25px;
     padding: 0 auto;
 }
 
 .dynamic-text {
     font-family:Helvetica, Arial, sans-serif;
+}
+
+#delete-account-button {
+    font-size: 20px;
+    background-color: #fff;
+    color: navy;
+    border-radius: 15px;
+    box-shadow: 0px 4px 12px navy;
+    padding: 0.75rem;
+    margin: 10px auto;
 }
 
 
@@ -309,15 +328,18 @@ footer a,
 }
 
 #login-button {
-    padding: 3px;
     font-size: 20px;
+    background-color: #fff;
     color: navy;
+    border-radius: 15px;
+    box-shadow: 0px 4px 12px navy;
+    padding: 0.75rem;
+    margin: 10px auto;
 }
 
-#login-redirect {
+#register-redirect {
     margin: 10px, auto;
-    font-size: 35px;
-    padding: 0 auto;
+    font-size: 25px;
 }
 
 
@@ -345,14 +367,18 @@ footer a,
 }
 
 #register-button {
-    padding: 3px;
-    font-size: 30px;
+    font-size: 20px;
+    background-color: #fff;
     color: navy;
+    border-radius: 15px;
+    box-shadow: 0px 4px 12px navy;
+    padding: 0.75rem;
+    margin: 10px auto;
 }
 
 #login-redirect {
     margin: 10px, auto;
-    font-size: 35px;
+    font-size: 25px;
     padding: 0 auto;
 }
 
@@ -368,13 +394,18 @@ footer a,
 
 #dashboard-welcome {
     text-align: center;
-    font-size: 35px;
+    font-size: 40px;
+    margin: 0 auto;
 }
 
 #dashboard-coach {
     text-align: left;
-    font-size: 25px;
+    font-size: 30px;
     margin: 0 auto;
+}
+
+#dashboard-text {
+    font-size: 15px;
 }
 
 
@@ -397,18 +428,19 @@ footer a,
     font-size: 25px;
 }
 
-#video-text {
-    font-family: Helvetica, Arial, sans-serif;
-}
-
+#video-text,
 #category {
     font-family: Helvetica, Arial, sans-serif;
 }
 
 #video-button {
-    padding: 3px;
-    font-size: 30px;
+    font-size: 20px;
+    background-color: #fff;
     color: navy;
+    border-radius: 15px;
+    box-shadow: 0px 4px 12px navy;
+    padding: 0.75rem;
+    margin: 10px auto;
 }
 
 /* =========================
@@ -425,6 +457,10 @@ footer a,
 #edit-welcome {
     text-align: center;
     font-size: 35px; 
+}
+
+#edit-choices {
+    color: black;
 }
 
 #edit-video {
@@ -446,15 +482,48 @@ footer a,
 }
 
 #edit-button {
-    padding: 3px;
-    font-size: 25px;
+    font-size: 20px;
+    background-color: #fff;
     color: navy;
+    border-radius: 15px;
+    box-shadow: 0px 4px 12px navy;
+    padding: 0.75rem;
+    margin: 10px auto;
+}
+
+#delete-dp-button {
+    font-size: 20px;
+    background-color: #fff;
+    color: navy;
+    border-radius: 15px;
+    box-shadow: 0px 4px 12px navy;
+    padding: 0.75rem;
+}
+
+#edit-dp-link {
+    font-size: 23px;
 }
 
 #edit-redirect {
     margin: 10px, auto;
     font-size: 27px;
     padding: 0 auto;
+}
+
+
+/* =========================
+   12. VIDEO_BANK.HTML
+   ========================= */
+
+#video-bank-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 65px;   
+}
+
+#video-bank-welcome {
+    text-align: center;
+    font-size: 35px; 
 }
 
 

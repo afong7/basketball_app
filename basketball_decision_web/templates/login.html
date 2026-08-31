@@ -4,13 +4,22 @@
 <header>
     <nav>
     <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="#contact">Contact</a></p>
+    </nav>
 
-    <h1 id="login-title">LOGIN</h1>
+    <h1 id="login-title">LOGIN TO YOUR ACCOUNT</h1>
 </header>
-<br>
-<br>
 
-<body>
+<section>
+    <figure class="about-logo">
+        <img 
+        id="logo" 
+        src="{{ url_for('static', filename='logo.png') }}"
+        alt="Think the Game logo"
+        >
+    </figure>
+</section>
+
+<section>
     <form method="POST">
         <label id="login-label">Username/Email: </label>
         <input id="login-text" type="text" name="identifier" required><br><br>
@@ -20,11 +29,10 @@
         
         <button id="login-button" type="submit">LOGIN</button>
     </form>
-    <br>
-    <br>
-    <br>
+</section>
+<br><br><br>
     
-    <h3 id="register-redirect">Don't have an account? Register here: <a href="{{ url_for('register') }}">REGISTER</a></h3>
-</body>
+    <h3 id="register-redirect">Don't have an account? <a href="{{ url_for('register') }}">REGISTER</a></h3>
+
 
 {% endblock %}

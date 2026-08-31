@@ -4,7 +4,7 @@
 <header>
     <nav>
         {% if current_user.is_authenticated %}
-        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('account') }}">Account</a> | <a href="{{ url_for('dashboard') }}">Dashboard</a> | <a href="#contact">Contact</a></p><br>
+        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('account') }}">Account</a> | <a href="{{ url_for('logout') }}">LOGOUT</a> | <a href="#contact">Contact</a></p><br>
         {% else %}
         <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('login') }}">Login/Make an Account</a> | <a href="#contact">Contact</a></p>
         {% endif %}
@@ -14,13 +14,35 @@
 </header>
 <br><br>
 
-    <h2 id="dashboard-welcome">Welcome {{ user.username }}!</h2>
-    <h3 id="dashboard-coach">Coach Tools</h3>
-    <p id="dashboard-text"><a href="{{ url_for('upload_video') }}">Upload a new training video</a></p><br>
-    <p id="dashboard-text"><a href="{{ url_for('video_bank') }}">Edit a video in your video bank</a></p><br>
-    <p id="dashboard-text"><a href="{{ url_for('video_bank') }}">View your video bank</a></p>
-    <br>
-    <br>
-    <h3 id="dashboard-coach">Player Tools</h3>
-    <p id="dashboard-text">Training progress and stats will appear here later...</p>
+<section>
+    <h2 id="dashboard-welcome">Welcome {{ user.username }}!</h2><br><br>
+    <div class="video-grid">
+        <article class="video-card">
+            <h3 id="dashboard-coach">Coach Tools</h3><br>
+            <p id="dashboard-text"><a href="{{ url_for('upload_video') }}">Upload a new training video</a></p>
+            <p id="dashboard-text"><a href="{{ url_for('video_bank') }}">Edit a video in your video bank</a></p>
+            <p id="dashboard-text"><a href="{{ url_for('video_bank') }}">View your video bank</a></p>
+        </article>
+    </div>
+</section>
+
+    <section>
+        <figure class="site-logo">
+            <img 
+            id="logo" 
+            src="{{ url_for('static', filename='logo.png') }}"
+            alt="Think the Game logo"
+            >
+        </figure>
+    </section>
+
+<section>
+    <div class="video-grid">
+        <article class="video-card">
+            <h3 id="dashboard-coach">Player Tools</h3><br>
+            <p id="dashboard-text">Training progress and stats will appear here later...</p>
+        </article>
+    </div>
+</section>
+    
 {% endblock %}

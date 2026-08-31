@@ -4,7 +4,7 @@
 <header>
     <nav>
         {% if current_user.is_authenticated %}
-        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('account') }}">Account</a> | <a href="{{ url_for('dashboard') }}">Dashboard</a> | <a href="#contact">Contact</a></p><br>
+        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('account') }}">Account</a> | <a href="{{ url_for('dashboard') }}">Dashboard</a> | <a href="{{ url_for('logout') }}">LOGOUT</a> | <a href="#contact">Contact</a></p><br>
         {% else %}
         <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('login') }}">Login/Make an Account</a> | <a href="#contact">Contact</a></p>
         {% endif %}
@@ -22,7 +22,7 @@
             <p><strong>Category:</strong> {{ video.category }}</p>
             <p>{{ video.description }}</p><br>
 
-            <a href="{{ url_for('video', video_id=video.id) }}">Start this video</a><br>
+            <a href="{{ url_for('video', video_id=video.id) }}">Start this video</a><br><br>
             <a href="{{ url_for('edit_video', video_id=video.id) }}">Edit this video</a>
         </article>
         {% endfor %}

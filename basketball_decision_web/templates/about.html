@@ -4,7 +4,7 @@
 <header>
     <nav>
         {% if current_user.is_authenticated %}
-        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('account') }}">Account</a> | <a href="{{ url_for('dashboard') }}">Dashboard</a> | <a href="#contact">Contact</a></p><br>
+        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('account') }}">Account</a> | <a href="{{ url_for('dashboard') }}">Dashboard</a> | <a href="{{ url_for('logout') }}">LOGOUT</a> | <a href="#contact">Contact</a></p><br>
         {% else %}
         <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('login') }}">Login/Make an Account</a> | <a href="#contact">Contact</a></p>
         {% endif %}
@@ -14,13 +14,19 @@
 </header>
 <br><br>
 
-<body>
     <nav>
         <p><a href="#what">How do I use it?</a> | <a href="#mission">The Mission</a> | <a href="#coaches">For Coaches</a></p>
     </nav>
-    <br>
-    <br>
-    <br>
+
+<section>
+    <figure class="about-logo">
+        <img 
+        id="logo" 
+        src="{{ url_for('static', filename='logo.png') }}"
+        alt="Think the Game logo"
+        >
+    </figure>
+</section>
 
 <section id="what">
     <div class="card">
@@ -82,5 +88,4 @@
     <a href="{{ url_for('index') }}">Return to Homepage</a>
 </section>
 
-</body>
 {% endblock %}
