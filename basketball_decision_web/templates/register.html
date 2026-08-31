@@ -22,6 +22,14 @@
 
 <section>
     <h2 id="register-header">Create an Account!</h2><br><br>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <p class="error-message">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
 
     <form method="POST">
         <label id="register-label">Username: </label>
@@ -30,8 +38,12 @@
         <label id="register-label">Email: </label>
         <input id="register-text" type="email" name="email" required><br><br>
         
-        <label id="register-label" for="password">Password: </label>        
-        <input type="password" id="password" name="password"><br><br><br>
+        <label id="register-label">Password:</label>
+        <input id="password-text" type="password" id="password" name="password" required><br><br>
+        
+        <label id="register-label">Confirm Password:</label>
+        <input id="password-text" type="password" id="confirm-password" name="confirm_password" required><br><br><br>
+
         
         <button id="register-button" type="submit">REGISTER</button>
     </form>

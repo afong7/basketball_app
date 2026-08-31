@@ -6,7 +6,7 @@
         {% if current_user.is_authenticated %}
         <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('account') }}">Account</a> | <a href="{{ url_for('dashboard') }}">Dashboard</a> | <a href="{{ url_for('logout') }}">LOGOUT</a> | <a href="#contact">Contact</a></p><br>
         {% else %}
-        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('login') }}">Login/Make an Account</a> | <a href="#contact">Contact</a></p>
+        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('login') }}">Login/Register</a> | <a href="#contact">Contact</a></p>
         {% endif %}
     </nav>
 
@@ -15,12 +15,18 @@
 <br><br>
 
   <section>
+    <p id="decision-counter" hidden></p><br>
     <video id="training-video" controls width="600">      
       <source
       src="{{ url_for('static', filename='uploads/' ~ video.video_file) }}"
       type="video/mp4"
       >Your browser does not support this video format.
     </video>
+    <div id="progress-bar-container">      
+      <div id="progress-bar"></div>
+      <div id="decision-markers"></div>
+    </div>
+
   </section>
 
   <section id="question-panel" hidden>
@@ -43,7 +49,7 @@
     <h2>Video complete!</h2>
     <p id="completion-message"></p>
 
-    <a href="{{ url_for('index') }}">Return to all videos</a>
+    <a href="{{ url_for('dashboard') }}">Return to all videos</a>
   </section>
   
   <script>

@@ -10,16 +10,6 @@
 </header>
 
 <section>
-    <p id="account-header">Here are the details of your account</p>
-
-    <p id="account-text"><strong>Username: </strong></p><p class="dynamic-text">{{ user.username }}</p>
-    <br>
-    <p id="account-text"><strong>Email: </strong></p> <p class="dynamic-text">{{ user.email }}</p>
-    <br>
-    <p id="account-text"><strong>Date joined: </strong></p> <p class="dynamic-text">{{ user.created_at }}</p>
-</section>
-
-<section>
     <figure class="about-logo">
         <img 
         id="logo" 
@@ -30,13 +20,24 @@
 </section>
 
 <section>
+    <p id="account-header">Here are the details of your account</p>
+
+    <p id="account-text"><strong>Username: </strong></p><p class="dynamic-text">{{ user.username }}</p>
+    <br>
+    <p id="account-text"><strong>Email: </strong></p> <p class="dynamic-text">{{ user.email }}</p>
+    <br>
+    <p id="account-text"><strong>Date joined: </strong></p> <p class="dynamic-text">{{ user.created_at }}</p>
+</section>
+<br><br><br>
+
+<section>
     <h3 id="logout-redirect">If you want to logout: <a href="{{ url_for('logout') }}">CLICK HERE</a></h3>
 </section>
 
 <section>
     <form method="POST" action="{{ url_for('delete_account') }}">
         <p id="delete-button-text"><strong>If you want to delete your account:</strong></p>
-        <button id="delete-account-button" type="submit">Delete Account</button>
+        <button id="delete-account-button" onclick="return confirm('Are you sure you want to delete this?');">Delete</button>
     </form>
 </section>
     

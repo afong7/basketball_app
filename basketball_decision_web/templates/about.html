@@ -6,7 +6,7 @@
         {% if current_user.is_authenticated %}
         <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('account') }}">Account</a> | <a href="{{ url_for('dashboard') }}">Dashboard</a> | <a href="{{ url_for('logout') }}">LOGOUT</a> | <a href="#contact">Contact</a></p><br>
         {% else %}
-        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('login') }}">Login/Make an Account</a> | <a href="#contact">Contact</a></p>
+        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('login') }}">Login/Register</a> | <a href="#contact">Contact</a></p>
         {% endif %}
     </nav>
 
@@ -15,7 +15,7 @@
 <br><br>
 
     <nav>
-        <p><a href="#what">How do I use it?</a> | <a href="#mission">The Mission</a> | <a href="#coaches">For Coaches</a></p>
+        <p><a href="#mission">The Mission</a> | <a href="#what">How do I use it?</a> | <a href="#coaches">For Coaches</a></p>
     </nav>
 
 <section>
@@ -28,35 +28,13 @@
     </figure>
 </section>
 
-<section id="what">
-    <div class="card">
-        <h2>How do I use this app?</h2>
-        <ol>
-            <li>Coaches (or other users) upload some game film. It could be separate video clips or whole quarters/halves/games.</li>
-            <li>Choose your pause time (right before an action happens) and reveal time (when the correct answer is shown).</li>
-            <li>After the clip pauses (at the pause time), players choose from a multiple choice question what they think is the best decision.</li>
-            <li>The video plays until the reveal time, where an explanation will pop up explaining what the best decision is and why. (The explanation can be inputted or verbally stated)</li>
-        </ol>
-    </div>
-</section>
-
-<section>
-    <figure class="about-logo">
-        <img
-        id="logo"
-        src="{{ url_for('static', filename='logo.png') }}"
-        alt="Think the Game logo"
-        >
-    </figure>
-</section>
-
 <section id="mission">
     <div class="card">
         <h2>The Mission</h2>
-        <p>
+        <p id="about-text">
             How times has your coach urged you to think or not to just go through the motions or to read the defense?
             I've told the players I've coached that basketball is a physical game, yes, but it's also a mental game. 
-            You have to outthink your opponent on offense and defense. However, a lot of players don't know how to visualize this.<br><br>
+            You have to outthink your opponent on both offense and defense. However, a lot of players don't know how to visualize this.<br><br>
             Whether you're a beginner trying to understand the mental side of basketball or you're a serious player who loves to watch film, 
             by watching video clips from your own games or from professionals (NBA, WNBA, etc.), the hope is you will develop/enhance your
             basketball IQ through real game situations and learn what it means to think the game.
@@ -74,11 +52,34 @@
     </figure>
 </section>
 
+<section id="what">
+    <div class="card">
+        <h2>How do I use this app?</h2>
+        <ol id="about-text">
+            <li>Coaches (or other users) upload some game film. It could be separate, targeted video clips or whole quarters (for now).</li>
+            <li>Choose your pause time (right before an action happens) and reveal time (when you want the correct answer to be shown).</li>
+            <li>After the clip pauses, players will choose from a multiple choice question what they think is the best decision.</li>
+            <li>The video plays until the reveal time, where an explanation will pop up explaining what the best decision is and why. (The explanation can be inputted or verbally stated)</li>
+            <li>After the whole video is completed, users can view their scores and hopefully learn something to improve their game!</li>
+        </ol>
+    </div>
+</section>
+
+<section>
+    <figure class="about-logo">
+        <img
+        id="logo"
+        src="{{ url_for('static', filename='logo.png') }}"
+        alt="Think the Game logo"
+        >
+    </figure>
+</section>
+
 <section id="coaches">
     <div class="card">
         <h2>For Coaches</h2>
-        <p>For coaches, you can either upload your own game film, or just use the default videos. 
-            However, if you upload your own film, you must choose pause times and reveal times (i.e. you must go through the film yourself).
+        <p id="about-text">For coaches, you can either upload your own game film, or just use the default videos. 
+            However, if you upload your own film, you must choose pause times and reveal times (i.e. you must go through the film yourself first).
         </p>
     </div>
 </section>

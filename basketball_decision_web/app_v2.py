@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, redirect, render_template, request, url_for, flash
 from flask_login import UserMixin, LoginManager, login_user, logout_user, current_user, login_required
 
 from flask_sqlalchemy import SQLAlchemy
@@ -278,11 +278,20 @@ def register():
         username = request.form.get("username")
         email = request.form.get("email")
         password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
 
+        # Check email uniqueness
         existing = User.query.filter_by(email=email).first()
         if existing:
-            return "Email already registered. Please log in.", 400
+            flash("Email already registered. Please log in.", "error")
+            return render_template("register.html")
 
+        # Check password match BEFORE creating user
+        if password != confirm_password:
+            flash("Passwords do not match. Please try again.", "error")
+            return render_template("register.html")
+
+        # Create user only after validation
         new_user = User(username=username, email=email)
         new_user.set_password(password)
 
@@ -290,13 +299,9 @@ def register():
         db.session.commit()
 
         login_user(new_user)
-
         return redirect("/")
 
-    return render_template(
-        "register.html",
-        title="Register | Think the Game"
-    )
+    return render_template("register.html", title="Register | Think the Game")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -304,36 +309,42 @@ def login():
     if request.method == "POST":
         identifier = request.form.get("identifier")
         password = request.form.get("password")
-        if not identifier or not password:
-            return "Please enter both username/email and password", 400
 
+        if not identifier or not password:
+            flash("Please enter both username/email and password.", "error")
+            return render_template("login.html")
+
+        # Determine whether identifier is email or username
         if "@" in identifier:
             user = User.query.filter_by(email=identifier).first()
         else:
-            user = user = User.query.filter_by(username=identifier).first()    
+            user = User.query.filter_by(username=identifier).first()
 
-        if user and user.check_password(password):
-            login_user(user)
-            return redirect("/")
-        else:
-            return "Invalid email or password.", 400
+        # Validate login
+        if not user or not user.check_password(password):
+            flash("Invalid username or password. Please try again.", "error")
+            return render_template("login.html")
 
-    return render_template(
-        "login.html",
-        title="Login | Think the Game"
-    )
+        # Success
+        login_user(user)
+        return redirect("/")
+
+    return render_template("login.html", title="Login | Think the Game")
+
 
 @app.route("/account")
 @login_required
 def account():
     return render_template("account.html", user=current_user, title="Account | Think the Game")
 
+
 @app.route("/delete_account", methods=["POST"])
 @login_required
 def delete_account():
     user=current_user
-    db.session.delete()
+    db.session.delete(user)
     db.session.commit()
+    logout_user()
     return redirect(url_for('index'))
 
 @app.route("/logout")
