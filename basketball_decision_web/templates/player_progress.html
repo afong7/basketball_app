@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header>
+    <nav>
+        {% if current_user.is_authenticated %}
+        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('account') }}">Account</a> | <a href="{{ url_for('dashboard') }}">Dashboard</a> | <a href="{{ url_for('logout') }}">LOGOUT</a> | <a href="#contact">Contact</a></p><br>
+        {% else %}
+        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('login') }}">Login/Register</a> | <a href="#contact">Contact</a></p>
+        {% endif %}
+    </nav>
+
+    <h1 id="dashboard-title">Progress Report</h1>
+</header>
+<br><br>
+
+<h2 id="dashboard-welcome">Welcome {{ current_user.username }}!</h2>
+<br><br><br>
+
+{% if progress_entries %}
+    <table id="progress-table">
+        <tr>
+            <th id="progress-data">Video</th>
+            <th id="progress-data">Score</th>
+            <th id="progress-data">Date Completed</th>
+        </tr>
+
+        {% for entry in progress_entries %}
+        <tr>
+            <td id="progress-data">{{ entry.video.title }}</td>
+            <td id="progress-data">{{ entry.correct_answers }} / {{ entry.total_questions }}</td>
+            <td id="progress-data">{{ entry.timestamp.strftime("%Y-%m-%d %H:%M") }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p id="progress-text">You haven't completed any training videos yet.</p>
+{% endif %}
+
+{% endblock %}

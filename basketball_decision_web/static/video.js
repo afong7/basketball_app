@@ -182,6 +182,19 @@ video.addEventListener("ended", function () {
     " out of " +
     totalQuestions +
     " decisions correctly.";
+
+  // ---- SAVE PROGRESS TO SERVER ----
+  fetch("/save_progress", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      video_id: window.videoData.videoId,
+      correct_answers: correctAnswers,
+      total_questions: totalQuestions
+    })
+  });
 });
 
 

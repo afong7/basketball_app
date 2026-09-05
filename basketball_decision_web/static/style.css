@@ -58,11 +58,21 @@ ul {
 }
 
 footer {
-    margin: 10px;
+    margin: 20px;
     padding: 3px;
     border: 3px navy solid;
     background-color: navy;
-    color: #fff;
+    color: darkorange;
+}
+
+#contact {
+    line-height: 3px;
+    font-size: 15px;
+}
+
+#title-trademark {
+    text-align: right;
+    margin-bottom: 0;
 }
 
 .site-logo {
@@ -282,20 +292,37 @@ footer a,
 #answer-choices {
     display: grid;
     gap: 0.75rem;
-    margin-top: 1rem;
-    color: darkorange;
-    font-size: 15px;
-    border-radius: 15px;
 }
 
-#answer-choices-button,
+#answer-choices button {
+    padding: 0.8rem 1rem;
+    margin-top: 0.5rem;
+    cursor: pointer;
+    color: #000;
+    font-size: 20px;
+    background-color: #fff;
+    border: 2px solid navy;
+    border-radius: 15px;
+    justify-content: center;
+}
+
+#answer-choices button:hover,
+#continue-button:hover {
+    background-color: darkorange;
+    color: white;
+}
+
 #continue-button {
     padding: 0.8rem 1rem;
     cursor: pointer;
     color: darkorange;
     font-size: 20px;
     background-color: #fff;
+    border: 2px solid navy;
+    border-radius: 15px;
+    justify-content: center;
 }
+
 
 #completion-panel a {
     font-size: 20px;
@@ -584,6 +611,47 @@ footer a,
     gap: 20px; /* Optional spacing between your grid items */
 }
 
+/* =========================
+   13. PLAYER_PROGRESS.HTML
+   ========================= */
+
+#progress-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 65px; 
+}
+
+/* #progress-table, #progress-text */
+
+/* =========================
+   14. COACH_DASHBOARD.HTML
+   ========================= */
+
+#dashboard-header {
+    font-weight: bold;
+    font-size: 27px;
+}
+
+#progress-table {
+    border-spacing: 25px 5px;
+}
+
+#progress-data {
+    text-align: center;
+    font-size: 20px;
+}
+
+#progress-text {
+    color:#000;
+    font-size: 20px;
+    margin: 5px auto;
+}
+
+#progress-redirect {
+    margin: 10px, auto;
+    font-size: 23px;
+    padding: 0 auto;
+}
 
 
 /* =========================

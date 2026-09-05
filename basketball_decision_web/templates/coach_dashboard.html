@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<header>
+    <nav>
+        {% if current_user.is_authenticated %}
+        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('account') }}">Account</a> | <a href="{{ url_for('logout') }}">LOGOUT</a> | <a href="#contact">Contact</a></p><br>
+        {% else %}
+        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('login') }}">Login/Register</a> | <a href="#contact">Contact</a></p>
+        {% endif %}
+    </nav>
+
+    <h1 id="dashboard-title">Coach Dashboard</h1>
+</header>
+<br><br><br>
+
+<h2 id="dashboard-welcome">Welcome Coach {{ current_user.username }}!</h2>
+
+<br><br>
+
+<h3 id="dashboard-header">Your Players</h3>
+<ul>
+    {% for player in players %}
+        <li id="progress-text">{{ player.username }}</li>
+    {% else %}
+        <p id="progress-text">No players assigned to you yet.</p>
+    {% endfor %}
+</ul>
+
+<br>
+
+<h3 id="dashboard-header">Player Progress</h3>
+<table id="progress-table">
+    <tr>
+        <th id="progress-data">Player</th>
+        <th id="progress-data">Video</th>
+        <th id="progress-data">Correct</th>
+        <th id="progress-data">Total</th>
+        <th id="progress-data">Date</th>
+    </tr>
+
+    {% for entry in progress %}
+    <tr>
+        <td id="progress-data">{{ entry.user.username }}</td>
+        <td id="progress-data">{{ entry.video.title }}</td>
+        <td id="progress-data">{{ entry.correct_answers }}</td>
+        <td id="progress-data">{{ entry.total_questions }}</td>
+        <td id="progress-data">{{ entry.timestamp.strftime('%Y-%m-%d') }}</td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="5">No progress recorded yet.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br><br><br>
+
+<p id="progress-redirect"><a href="{{ url_for('video_bank') }}">Go to Your Video Bank</a></p>
+<p id="progress-redirect"><a href="{{ url_for('upload_video') }}">Upload a New Training Video</a></p>
+
+{% endblock %}

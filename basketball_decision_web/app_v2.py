@@ -1,7 +1,9 @@
 from datetime import datetime
 
-from flask import Flask, redirect, render_template, request, url_for, flash
+from flask import Flask, redirect, render_template, request, url_for, flash, abort
 from flask_login import UserMixin, LoginManager, login_user, logout_user, current_user, login_required
+
+from functools import wraps
 
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -35,6 +37,9 @@ class User(UserMixin,db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
+    role = db.Column(db.String(20), nullable=False, default="player")
+    coach_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+
     created_at = db.Column(
         db.DateTime,
         nullable=False,
@@ -42,6 +47,7 @@ class User(UserMixin,db.Model):
         index=True
     )
     videos = db.relationship("Video", backref="user", lazy=True)
+    coach = db.relationship("User", remote_side="User.id", backref="players")
 
 
     def set_password(self, password):
@@ -49,6 +55,19 @@ class User(UserMixin,db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+class PlayerProgress(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    video_id = db.Column(db.Integer, db.ForeignKey("videos.id"), nullable=False)
+
+    correct_answers = db.Column(db.Integer, default=0)
+    total_questions = db.Column(db.Integer, default=0)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship("User", backref="progress")
+    video = db.relationship("Video", backref="progress")
+
 
 class Video(db.Model):
     __tablename__ = "videos"
@@ -114,103 +133,28 @@ class AnswerChoice(db.Model):
     position = db.Column(db.Integer, nullable=False)
 
 
-# def create_data():
-#     sample_title = "Start of the game"
-
-#     existing_video = Video.query.filter_by(title=sample_title).first()
-
-#     if existing_video:
-#         return
-
-#     new_video = Video(
-#         title=sample_title,
-#         description=(
-#             "Watch this opening possession and make the best decision "
-#             "at each pause."
-#         ),
-#         category="Jump ball",
-#         video_file="clip1.mp4"
-#     )
-
-#     decision1 = DecisionPoint(
-#         video=new_video,
-#         pause_time=14.9,
-#         reveal_time=16.3,
-#         question="Where should the centre tip it to?",
-#         explanation="There is no defense behind. It's the safest option."
-#     )
-
-#     answer_choice1 = AnswerChoice(
-#         decision_point=decision1,
-#         text="Behind",
-#         is_correct=True,
-#         position=1
-#     )
-
-#     answer_choice2 = AnswerChoice(
-#         decision_point=decision1,
-#         text="In front",
-#         is_correct=False,
-#         position=2
-#     )
-
-#     answer_choice3 = AnswerChoice(
-#         decision_point=decision1,
-#         text="To the side",
-#         is_correct=False,
-#         position=3
-#     )
-
-#     decision2 = DecisionPoint(
-#         video=new_video,
-#         pause_time=16.8,
-#         reveal_time=19.4,
-#         question="What is the best next decision?",
-#         explanation=(
-#             "The player who caught the jump ball is a 4 and defense has "
-#             "gotten up. Unless she's Wemby (she's not), find a ball handler."
-#         )
-#     )
-
-#     answer_choice4 = AnswerChoice(
-#         decision_point=decision2,
-#         text="Dribble across half",
-#         is_correct=False,
-#         position=1
-#     )
-
-#     answer_choice5 = AnswerChoice(
-#         decision_point=decision2,
-#         text="Find a ball handler",
-#         is_correct=True,
-#         position=2
-#     )
-
-#     answer_choice6 = AnswerChoice(
-#         decision_point=decision2,
-#         text="Throw the ball out of bounds",
-#         is_correct=False,
-#         position=3
-#     )
-
-#     db.session.add_all([
-#         new_video,
-#         decision1,
-#         decision2,
-#         answer_choice1,
-#         answer_choice2,
-#         answer_choice3,
-#         answer_choice4,
-#         answer_choice5,
-#         answer_choice6
-#     ])
-
-#     db.session.commit()
-
 # Tells Flask‑Login how to load a user from the database when they have a session cookie.
 @login_manager.user_loader
 def load_user(user_id):
     return db.session.get(User, int(user_id))
+
+
+# ---- ROLE DECORATORS GO HERE ----
+def coach_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if not current_user.is_authenticated or current_user.role != "coach":
+            return "Forbidden", 403
+        return f(*args, **kwargs)
+    return wrapper
+
+def player_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if not current_user.is_authenticated or current_user.role != "player":
+            return "Forbidden", 403
+        return f(*args, **kwargs)
+    return wrapper
 
 
 @app.route("/")
@@ -260,7 +204,8 @@ def video(video_id):
         "video.html",
         title=video.title,
         video=video,
-        decision_points_data=decision_points_data
+        decision_points_data=decision_points_data,
+        video_id=video.id
     )
 
 
@@ -271,28 +216,45 @@ def about():
         title="About | Think the Game"
     )
 
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    coaches = User.query.filter_by(role="coach").all()
+
     if request.method == "POST":
         username = request.form.get("username")
         email = request.form.get("email")
+        role = request.form.get("role")
+        coach_id = request.form.get("coach_id")
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
 
-        # Check email uniqueness
+        # Email uniqueness
         existing = User.query.filter_by(email=email).first()
         if existing:
             flash("Email already registered. Please log in.", "error")
-            return render_template("register.html")
+            return render_template("register.html", coaches=coaches)
 
-        # Check password match BEFORE creating user
+        # Password match
         if password != confirm_password:
             flash("Passwords do not match. Please try again.", "error")
-            return render_template("register.html")
+            return render_template("register.html", coaches=coaches)
 
-        # Create user only after validation
-        new_user = User(username=username, email=email)
+        # Create user correctly
+        if role == "player":
+            new_user = User(
+                username=username,
+                email=email,
+                role="player",
+                coach_id=coach_id
+            )
+        else:
+            new_user = User(
+                username=username,
+                email=email,
+                role="coach",
+                coach_id=None
+            )
+
         new_user.set_password(password)
 
         db.session.add(new_user)
@@ -301,7 +263,7 @@ def register():
         login_user(new_user)
         return redirect("/")
 
-    return render_template("register.html", title="Register | Think the Game")
+    return render_template("register.html", title="Register | Think the Game", coaches=coaches)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -357,24 +319,43 @@ def logout():
 @app.route("/dashboard")
 @login_required
 def dashboard():
+    players = current_user.players
+
+    progress = (PlayerProgress.query.join(User).filter(User.coach_id == current_user.id).all())
+
     return render_template(
         "dashboard.html",
         title="Dashboard | Think the Game",
-        user=current_user
+        user=current_user,
+        players=players,
+        progress=progress
     )
+
 
 @app.route("/coach/videos")
 @login_required
+@coach_required
 def video_bank():
     videos = Video.query.filter_by(user_id=current_user.id).all()
     return render_template(
-        "video_bank.html",
+        "video_bank.html", 
+        title = "Video Bank | Think the Game",
+        videos=videos)
+
+@app.route("/player/videos")
+@login_required
+@player_required
+def player_video_bank():
+    videos = Video.query.filter_by(user_id=current_user.coach_id).all()
+    return render_template(
+        "video_bank.html", 
         title="Video bank | Think the Game",
         videos=videos)
 
 
 @app.route("/upload_video", methods=["GET", "POST"])
 @login_required
+@coach_required
 def upload_video():
     if request.method == "POST":
         file = request.files.get("video_file")
@@ -420,6 +401,7 @@ def upload_video():
 
 @app.route("/edit_video/<int:video_id>", methods=["GET", "POST"])
 @login_required
+@coach_required
 def edit_video(video_id):
     video = db.get_or_404(Video, video_id)
 
@@ -470,6 +452,7 @@ def edit_video(video_id):
     )
 
 @app.route("/delete_decision_point/<int:dp_id>", methods=["POST"])
+@coach_required
 def delete_decision_point(dp_id):
     dp = db.get_or_404(DecisionPoint, dp_id)
     video_id = dp.video_id
@@ -478,6 +461,7 @@ def delete_decision_point(dp_id):
     return redirect(url_for("edit_video", video_id=video_id))
 
 @app.route("/edit_decision_point/<int:dp_id>", methods=["GET", "POST"])
+@coach_required
 def edit_decision_point(dp_id):
     dp = db.get_or_404(DecisionPoint, dp_id)
     vid = dp.video
@@ -502,6 +486,67 @@ def edit_decision_point(dp_id):
 
     return render_template("edit_dp.html", title="Edit Decision Point | Think the Game", dp=dp, vid=vid)
 
+
+@app.route("/coach/dashboard")
+@login_required
+@coach_required
+def coach_dashboard():
+    players = current_user.players
+    progress = (
+        PlayerProgress.query
+        .join(User)
+        .filter(User.coach_id == current_user.id)
+        .all()
+    )
+
+    return render_template(
+        "coach_dashboard.html",
+        players=players,
+        progress=progress
+    )
+
+
+@app.route("/player_progress")
+@player_required
+def player_progress():
+    if not current_user.is_authenticated:
+        return redirect(url_for("login"))
+
+    # Get all progress entries for this player
+    progress_entries = (
+        PlayerProgress.query
+        .filter_by(user_id=current_user.id)
+        .join(Video)
+        .filter(Video.user_id == current_user.coach_id)
+        .all()
+    )
+
+    return render_template(
+        "player_progress.html",
+        progress_entries=progress_entries,
+        user=current_user
+    )
+
+
+@app.route("/save_progress", methods=["POST"])
+@login_required
+def save_progress():
+    data = request.get_json()
+
+    video_id = data.get("video_id")
+    correct = data.get("correct_answers")
+    total = data.get("total_questions")
+
+    progress = PlayerProgress(
+        user_id=current_user.id,
+        video_id=video_id,
+        correct_answers=correct,
+        total_questions=total
+    )
+
+    db.session.add(progress)
+    db.session.commit()
+    return {"status": "ok"}
 
 # Allows us to actually see the app in action when we run the script + upload/update the database
 if __name__ == "__main__":

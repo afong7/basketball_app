@@ -37,6 +37,21 @@
         
         <label id="register-label">Email: </label>
         <input id="register-text" type="email" name="email" required><br><br>
+
+        <label id="register-label">Account Type:</label>
+        <select id="register-text" name="role" required>
+            <option value="player">Player</option>
+            <option value="coach">Coach</option>
+        </select><br><br>
+
+        <div id="coach-select" style="display:none;">
+            <label id="register-label">Select Your Coach:</label>
+            <select id="register-text" name="coach_id">
+                {% for coach in coaches %}
+                <option value="{{ coach.id }}">{{ coach.username }}</option>
+                {% endfor %}
+            </select>
+        </div><br>
         
         <label id="register-label">Password:</label>
         <input id="password-text" type="password" id="password" name="password" required><br><br>
@@ -47,6 +62,29 @@
         
         <button id="register-button" type="submit">REGISTER</button>
     </form>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const roleSelect = document.querySelector('select[name="role"]');
+    const coachSelect = document.getElementById('coach-select');
+
+    coachSelect.style.display = 'none';
+
+    // Show immediately if Player is already selected
+    if (roleSelect.value === 'player') {
+        coachSelect.style.display = 'block';
+    }
+
+    roleSelect.addEventListener('change', function() {
+        if (this.value === 'player') {
+            coachSelect.style.display = 'block';
+        } else {
+            coachSelect.style.display = 'none';
+        }
+    });
+});
+</script>
+
 </section>
 <br><br><br><br>
 

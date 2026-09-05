@@ -53,10 +53,12 @@
   </section>
   
   <script>
-  window.videoData = {
-    decisionPoints: {{ decision_points_data | tojson }}
+    window.videoData = {
+        decisionPoints: {{ decision_points_data | tojson }},
+        videoId: {{ video_id }}
     };
   </script>
+
 
   <script src="{{ url_for('static', filename='video.js') }}"></script>
 {% endblock %}

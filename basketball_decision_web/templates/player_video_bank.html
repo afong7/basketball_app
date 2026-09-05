@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<header>
+    <nav>
+        {% if current_user.is_authenticated %}
+        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('account') }}">Account</a> | <a href="{{ url_for('dashboard') }}">Dashboard</a> | <a href="{{ url_for('logout') }}">LOGOUT</a> | <a href="#contact">Contact</a></p><br>
+        {% else %}
+        <p><a href="{{ url_for('index') }}">Homepage</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('login') }}">Login/Register</a> | <a href="#contact">Contact</a></p>
+        {% endif %}
+    </nav>
+
+    <h1 id="video-bank-title">TRAINING VIDEO BANK</h1>
+</header>
+
+<section>
+    <h2 id="video-bank-welcome">Videos from Coach {{ current_user.coach.username }}</h2>
+    <div class="video-grid">
+        {% for video in videos %}
+        <article class="video-card">
+            <h3>{{ video.title }}</h3>
+            <p><strong>Category:</strong> {{ video.category }}</p>
+            <p>{{ video.description }}</p><br>
+
+            <a href="{{ url_for('video', video_id=video.id) }}">Start Training</a>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock %}
