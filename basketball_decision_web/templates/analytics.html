@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header>
+    <nav>
+        {% if current_user.is_authenticated %}
+        <p>
+            <a href="{{ url_for('index') }}">Homepage</a> |
+            <a href="{{ url_for('about') }}">About</a> |
+            <a href="{{ url_for('account') }}">Account</a> |
+            <a href="{{ url_for('dashboard') }}">Dashboard</a> |
+            <a href="{{ url_for('logout') }}">LOGOUT</a> |
+            <a href="#contact">Contact</a>
+        </p>
+        {% else %}
+        <p>
+            <a href="{{ url_for('index') }}">Homepage</a> |
+            <a href="{{ url_for('about') }}">About</a> |
+            <a href="{{ url_for('login') }}">Login/Register</a> |
+            <a href="#contact">Contact</a>
+        </p>
+        {% endif %}
+    </nav>
+
+    <h1 id="analytics-title">Progress Report</h1>
+</header>
+
+<br><br>
+
+<!-- ============================
+     OVERVIEW
+============================= -->
+<div class="dashboard-box">
+    <h2 id="analytics-header">Overview</h2>
+    <p id="overview-text"><strong>Average Player Accuracy:</strong> {{ (avg_accuracy * 100) | round(1) }}%</p>
+    <p id="overview-text"><strong>Most Active Player:</strong> {{ most_active_player or "N/A" }}</p>
+    <p id="overview-text"><strong>Most Improved Player:</strong> {{ most_improved_player or "N/A" }}</p>
+    <p id="overview-text"><strong>Most Challenging Video:</strong> {{ hardest_video or "N/A" }}</p>
+</div>
+<br><br><br><br>
+
+<!-- ============================
+     TABLE: Accuracy Per Player
+============================= -->
+<div class="dashboard-box">
+    <h2 id="analytics-header">Accuracy Per Player</h2>
+    <table class="analytics-table">
+        <tr>
+            <th id="analytics-input">Player</th>
+            <th id="analytics-input">Average Accuracy</th>
+            <th id="analytics-input">Attempts</th>
+        </tr>
+        {% for player, accuracies in player_stats.items() %}
+        <tr>
+            <td id="analytics-input">{{ player }}</td>
+            <td id="analytics-input">{{ ((accuracies | sum) / (accuracies | length) * 100) | round(1) }}%</td>
+            <td id="analytics-input">{{ accuracies | length }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+<br><br>
+
+<!-- ============================
+     CHART CONTAINER
+============================= -->
+<div class="dashboard-box">
+    <!-- <h2 id="chart-title">Accuracy Per Player</h2> -->
+    <canvas id="playerAccuracyChart"></canvas>
+</div>
+<br><br><br><br>
+
+<!-- ============================
+     TABLE: Accuracy Per Video
+============================= -->
+<div class="dashboard-box">
+    <h2 id="analytics-header">Accuracy Per Video</h2>
+    <table class="analytics-table">
+        <tr>
+            <th id="analytics-input">Video</th>
+            <th id="analytics-input">Average Accuracy</th>
+            <th id="analytics-input">Attempts</th>
+        </tr>
+        {% for video, accuracies in video_stats.items() %}
+        <tr>
+            <td id="analytics-input">{{ video }}</td>
+            <td id="analytics-input">{{ ((accuracies | sum) / (accuracies | length) * 100) | round(1) }}%</td>
+            <td id="analytics-input">{{ accuracies | length }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+<br><br>
+
+<!-- ============================
+     CHART CONTAINER
+============================= -->
+<div class="dashboard-box">
+    <!-- <h2 id="chart-title">Accuracy Per Video</h2> -->
+    <canvas id="videoAccuracyChart"></canvas>
+</div>
+<br><br><br><br>
+
+<!-- ============================
+     OTHER CHART CONTAINERS
+============================= -->
+<div class="dashboard-box">
+    <h2 id="chart-title">Attempts Per Player</h2>
+    <canvas id="attemptsChart"></canvas>
+</div>
+<br><br><br><br>
+
+<div class="dashboard-box">
+    <h2 id="chart-title">Accuracy Over Time</h2>
+    <canvas id="accuracyOverTimeChart"></canvas>
+</div>
+<br><br><br><br>
+
+<!-- ============================
+     CHART.JS SCRIPT
+============================= -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- ⭐ PURE JAVASCRIPT (NO JINJA LOOPS) -->
+<script>
+    /* -----------------------------------------
+       Load analytics data safely using JSON.parse
+    ----------------------------------------- */
+    const analyticsData = JSON.parse(`{{ player_stats | tojson | safe }}`);
+    const videoData = JSON.parse(`{{ video_stats | tojson | safe }}`);
+
+    /* -----------------------------------------
+       Player-level arrays
+    ----------------------------------------- */
+    const playerNames = Object.keys(analyticsData);
+
+    const playerAccuracies = playerNames.map(name => {
+        const arr = analyticsData[name];   // list of accuracies (0–1)
+        return arr.reduce((a, b) => a + b, 0) / arr.length * 100;
+    });
+
+    const playerAttempts = playerNames.map(name => analyticsData[name].length);
+
+    /* -----------------------------------------
+       Video-level arrays
+    ----------------------------------------- */
+    const videoNames = Object.keys(videoData);
+
+    const videoAccuracies = videoNames.map(name => {
+        const arr = videoData[name];
+        return arr.reduce((a, b) => a + b, 0) / arr.length * 100;
+    });
+
+    const videoAttempts = videoNames.map(name => videoData[name].length);
+
+    /* -----------------------------------------
+       Chart 1: Accuracy Per Player
+    ----------------------------------------- */
+    new Chart(document.getElementById("playerAccuracyChart"), {
+        type: "bar",
+        data: {
+            labels: playerNames,
+            datasets: [{
+                label: "Accuracy (%)",
+                data: playerAccuracies,
+                backgroundColor: "rgba(255, 140, 0, 0.6)",
+                borderColor: "darkorange",
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true, max: 100 }
+            }
+        }
+    });
+
+    /* -----------------------------------------
+       Chart 2: Accuracy Per Video
+    ----------------------------------------- */
+    new Chart(document.getElementById("videoAccuracyChart"), {
+        type: "bar",
+        data: {
+            labels: videoNames,
+            datasets: [{
+                label: "Accuracy (%)",
+                data: videoAccuracies,
+                backgroundColor: "rgba(0, 128, 255, 0.6)",
+                borderColor: "blue",
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true, max: 100 }
+            }
+        }
+    });
+
+    /* -----------------------------------------
+       Chart 3: Attempts Per Player
+    ----------------------------------------- */
+    new Chart(document.getElementById("attemptsChart"), {
+        type: "bar",
+        data: {
+            labels: playerNames,
+            datasets: [{
+                label: "Attempts",
+                data: playerAttempts,
+                backgroundColor: "rgba(100, 200, 100, 0.6)",
+                borderColor: "green",
+                borderWidth: 2
+            }]
+        },
+        options: {
+            indexAxis: "y"
+        }
+    });
+
+    /* -----------------------------------------
+       Chart 4: Accuracy Over Time (UPGRADED)
+       Multi-line chart — one line per player
+    ----------------------------------------- */
+
+    // Colors for each player
+    const colors = [
+        "rgba(255, 99, 132, 1)",
+        "rgba(54, 162, 235, 1)",
+        "rgba(255, 206, 86, 1)",
+        "rgba(75, 192, 192, 1)",
+        "rgba(153, 102, 255, 1)",
+        "rgba(255, 159, 64, 1)"
+    ];
+
+    const accuracyOverTimeDatasets = [];
+    let colorIndex = 0;
+
+    // Build dataset for each player
+    playerNames.forEach(name => {
+        const attempts = analyticsData[name];   // list of accuracies (0–1)
+        const accuracyPercentages = attempts.map(a => a * 100);
+
+        accuracyOverTimeDatasets.push({
+            label: name,
+            data: accuracyPercentages,
+            borderColor: colors[colorIndex % colors.length],
+            backgroundColor: colors[colorIndex % colors.length].replace("1)", "0.2)"),
+            borderWidth: 3,
+            tension: 0.3
+        });
+
+        colorIndex++;
+    });
+
+    // X-axis labels: Attempt numbers
+    const maxAttempts = Math.max(...playerNames.map(name => analyticsData[name].length));
+    const attemptLabels = Array.from({ length: maxAttempts }, (_, i) => `Attempt ${i + 1}`);
+
+    // Render upgraded chart
+    new Chart(document.getElementById("accuracyOverTimeChart"), {
+        type: "line",
+        data: {
+            labels: attemptLabels,
+            datasets: accuracyOverTimeDatasets
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    title: {
+                        display: true,
+                        text: "Accuracy (%)"
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: "Attempt Number"
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: "bottom"
+                }
+            }
+        }
+    });
+</script>
+<br><br><br>
+
+<!-- ============================
+     BACK TO DASHBOARD
+============================= -->
+<div class="dashboard-box">
+    <p id="dashboard-redirect"><strong>Return to dashboard: </strong>
+        <a href="{{ url_for('dashboard') }}">CLICK HERE</a>
+    </p>
+</div>
+
+{% endblock %}
+
+

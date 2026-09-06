@@ -2,6 +2,7 @@ from datetime import datetime
 
 from flask import Flask, redirect, render_template, request, url_for, flash, abort
 from flask_login import UserMixin, LoginManager, login_user, logout_user, current_user, login_required
+from flask_migrate import Migrate
 
 from functools import wraps
 
@@ -25,6 +26,7 @@ def allowed_file(filename):
 
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
@@ -64,6 +66,12 @@ class PlayerProgress(db.Model):
     correct_answers = db.Column(db.Integer, default=0)
     total_questions = db.Column(db.Integer, default=0)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    selected_answer = db.Column(db.String(120))
+    is_correct = db.Column(db.Boolean)
+    decision_point_index = db.Column(db.Integer)
+    time_taken = db.Column(db.Float)
+    attempt_number = db.Column(db.Integer)
 
     user = db.relationship("User", backref="progress")
     video = db.relationship("Video", backref="progress")
@@ -541,12 +549,57 @@ def save_progress():
         user_id=current_user.id,
         video_id=video_id,
         correct_answers=correct,
-        total_questions=total
+        total_questions=total,
+        selected_answer=data.get("selected_answer"),
+        is_correct=data.get("is_correct"),
+        decision_point_index=data.get("decision_point_index"),
+        time_taken=data.get("time_taken"),
+        attempt_number=data.get("attempt_number")
     )
 
     db.session.add(progress)
     db.session.commit()
     return {"status": "ok"}
+
+
+@app.route("/coach/analytics")
+@login_required
+@coach_required
+def analytics():
+    # All progress entries for this coach's players
+    progress_entries = (PlayerProgress.query.join(User).filter(User.coach_id == current_user.id).all())
+
+    # Group by player
+    from collections import defaultdict
+    player_stats = defaultdict(list)
+    video_stats = defaultdict(list)
+
+    for entry in progress_entries:
+        accuracy = entry. correct_answers / entry.total_questions if entry.total_questions else 0
+        player_stats[entry.user.username].append(accuracy)
+        video_stats[entry.video.title].append(accuracy)
+
+    # Compute analytics
+    def avg(lst):
+        return sum(lst) / len(lst) if lst else 0
+
+    avg_accuracy = avg([acc for lst in player_stats.values() for acc in lst])
+
+    most_active_player = max(player_stats.items(), key=lambda x: len(x[1]), default=(None, []))[0]
+    most_improved_player = max(player_stats.items(), key=lambda x: (x[1][-1] - x[1][0]) if len(x[1]) > 1 else -999, default=(None, []))[0]
+
+    hardest_video = min(video_stats.items(), key=lambda x: avg(x[1]), default=(None, []))[0]
+
+    return render_template(
+        "analytics.html",
+        title="Player Analytics | Think the Game",
+        avg_accuracy=avg_accuracy,
+        player_stats=player_stats,
+        video_stats=video_stats,
+        most_active_player=most_active_player,
+        most_improved_player=most_improved_player,
+        hardest_video=hardest_video
+    )
 
 # Allows us to actually see the app in action when we run the script + upload/update the database
 if __name__ == "__main__":

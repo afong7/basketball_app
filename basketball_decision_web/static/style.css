@@ -653,6 +653,54 @@ footer a,
     padding: 0 auto;
 }
 
+/* =========================
+   15. ANALYTICS.HTML
+   ========================= */
+
+#analytics-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 65px;
+}
+
+#analytics-header,
+#chart-title {
+    font-weight: bold;
+    font-size: 40px;
+}
+
+#overview-text {
+    line-height: 5px;
+    font-size: 20px;
+}
+
+#analytics-text {
+    color:#000;
+    font-size: 20px;
+    margin: 5px auto;
+}
+
+#analytics-table {
+    border-spacing: 25px 5px;
+}
+
+#analytics-input {
+    text-align: center;
+    font-size: 20px;
+}
+
+/* #playerAccuracyChart,
+#videoAccuracyChart,
+#attemptsChart,
+#accuracyOverTimeChart {
+    width: 700px auto;
+} */
+
+#dashboard-redirect {
+    margin: 10px, auto;
+    font-size: 23px;
+    padding: 0 auto;
+}
 
 /* =========================
    N. MOBILE STYLES
